@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">Hangboard Helper</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_add_workout">Add Blank Workout</string>
+    <string name="action_start">Start Workout</string>
+
+    <string name="workouts_label">Workouts</string>
+    <string name="logbook_label">Logbook</string>
+    <string name="analytics_label">Analytics</string>
+    <string name="purchases_label">Purchases</string>
+
+    <string name="start_countdown">Start</string>
+    <string name="workout_time">mm:ss</string>
+    <string name="timer">5:00</string>
+    <string name="entry_label_1">Initial Countdown</string>
+    <string name="entry_label_2">First Activity</string>
+
+    <!-- -
+        This is an ad unit ID for a banner test ad. Replace with your own banner ad unit id.
+        For more information, see https://support.google.com/admob/answer/3052638
+    <!- -->
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="title_activity_workouts">Workouts</string>
+
+    <string name="interstitial_ad_sample">Interstitial Ad Sample</string>
+    <string name="start_level">Level 1</string>
+    <string name="next_level">Next Level</string>
+    <!-- -
+        This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
+        For more information, see https://support.google.com/admob/answer/3052638
+    <!- -->
+    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_ad">Ad</string>
+    <string name="title_activity_logbook">Logbook</string>
+    <string name="title_activity_analytics">Analytics</string>
+    <string name="title_activity_edit_workout">Edit Workout</string>
+    <string name="title_activity_workout">Workout</string>
+
+</resources>
