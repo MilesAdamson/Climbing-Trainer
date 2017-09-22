@@ -56,6 +56,13 @@ public class WorkoutList extends AppCompatActivity {
         populateListViewFromDB();
     }
 
+    // Show changes made to workout list
+    @Override
+    protected void onResume(){
+        super.onResume();
+        populateListViewFromDB();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -289,4 +296,22 @@ public class WorkoutList extends AppCompatActivity {
         return true;
     }
 
+    public void help(MenuItem item){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(WorkoutList.this).create();
+                alertDialog.setMessage("Tap the name of a workout to begin it. To create a workout, " +
+                        "tap the plus button. To edit one, tap the pencil. To delete a workout, tap " +
+                        "and hold the pencil.");
+                alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, "Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
 }

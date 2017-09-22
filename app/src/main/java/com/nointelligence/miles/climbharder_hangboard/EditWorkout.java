@@ -401,4 +401,22 @@ public class EditWorkout extends AppCompatActivity {
         alerts.selectTypeAlert();
     }
 
+    public void help(MenuItem item){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(EditWorkout.this).create();
+                alertDialog.setMessage("Tap the pencil to choose an option for a workout activity. " +
+                                "Tap the plus to add a new activity to the bottom. Your editing is saved as " +
+                        "you go.");
+                alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, "Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
 }

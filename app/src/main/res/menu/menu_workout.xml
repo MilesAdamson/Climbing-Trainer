@@ -16,7 +16,7 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         android:icon="@mipmap/ic_help"
-        app:showAsAction="always" />
-
+        app:showAsAction="always"
+        android:onClick="help"/>
 
 </menu>
