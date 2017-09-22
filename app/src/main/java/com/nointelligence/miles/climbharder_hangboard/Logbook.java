@@ -4,16 +4,20 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Logbook extends AppCompatActivity {
-    // Remove the below line after defining your own ad unit ID.
-    private static final String TOAST_TEXT = "Test ads are being shown. "
-            + "To show live ads, replace the ad unit ID in res/values/strings.xml with your own ad unit ID.";
 
+    ListView logbook;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +30,15 @@ public class Logbook extends AppCompatActivity {
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
 
-    }
+        databaseHelper = new DatabaseHelper(this);
+        logbook = (ListView)findViewById(R.id.listLogbook);
+        ArrayList<String> listItems = databaseHelper.selectLogbook();
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1,
+                listItems);
 
+        logbook.setAdapter(arrayAdapter);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

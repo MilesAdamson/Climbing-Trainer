@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/colorLogbook"
+    android:background="@color/colorLight"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,6 +7,12 @@
     tools:context="com.nointelligence.miles.climbharder_hangboard.Logbook">
 
     <!-- view for AdMob Banner Ad -->
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listLogbook"
+        android:layout_marginBottom="50dp"/>
+
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="wrap_content"

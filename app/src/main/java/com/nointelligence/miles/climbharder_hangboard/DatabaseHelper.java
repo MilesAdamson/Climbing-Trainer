@@ -20,6 +20,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String T2_C1 = "activity";
     private static final String T2_C2 = "duration";
 
+    private static final String T3 = "logbook";
+    private static final String T3_C1 = "workout";
+    private static final String T3_C2 = "date";
+
     private static final String TEXT = " TEXT";
     private static final String INT = " INTEGER";
     private static final String UNIQUE = " UNIQUE";
@@ -33,11 +37,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database) {
         database.execSQL("CREATE TABLE " + T1 + " (" + T1_C1 + TEXT + UNIQUE + END);
+
+        database.execSQL("CREATE TABLE " + T3 + " ("
+                + "_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + T3_C1 + TEXT + ", "
+                + T3_C2 + TEXT + END);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         database.execSQL("DROP TABLE IF EXISTS " + T1);
+        database.execSQL("DROP TABLE IF EXISTS " + T3);
         onCreate(database);
     }
 
@@ -144,5 +154,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return new String(result);
+    }
+
+    public boolean insertLogbook(String name, String date){
+        String nameNoSpace = removeSpaces(name);
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues myCV = new ContentValues();
+
+        myCV.put(T3_C1, nameNoSpace);
+        myCV.put(T3_C2, date);
+
+        long result = db.insert(T3, null, myCV);
+
+        if (result == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // Returns the entire logbook table
+    public ArrayList<String> selectLogbook(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + T3 + ";", null);
+
+        ArrayList<String> tableEntires = new ArrayList<String>();
+
+        if(cursor.moveToFirst()) {
+            do {
+                tableEntires.add(cursor.getString(2) + ": " +replaceUnderscores(cursor.getString(1)));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        return tableEntires;
     }
 }

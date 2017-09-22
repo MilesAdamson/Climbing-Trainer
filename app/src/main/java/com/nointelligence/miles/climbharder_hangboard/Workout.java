@@ -26,7 +26,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.logging.LogRecord;
@@ -209,6 +212,7 @@ public class Workout extends AppCompatActivity {
                 totalTime += 25.0 / 1000;
                 currentIndex += 1;
                 if(currentIndex == workoutLength){
+                    saveWorkout();
                     resetWorkout();
                 }else{
                     displayWorkoutActivity();
@@ -272,5 +276,11 @@ public class Workout extends AppCompatActivity {
             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, currentVolume);
             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
         }
+    }
+
+    private void saveWorkout(){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String date = sdf.format(new Date());
+        databaseHelper.insertLogbook(name, date);
     }
 }
