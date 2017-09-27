@@ -167,9 +167,13 @@ public class WorkoutList extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        Intent intent = new Intent(getApplicationContext(), Workout.class);
-                        intent.putExtra("name", name);
-                        startActivity(intent);
+                        if(databaseHelper.selectRoutine(name)[0].size() > 0) {
+                            Intent intent = new Intent(getApplicationContext(), Workout.class);
+                            intent.putExtra("name", name);
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Workout is empty.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 

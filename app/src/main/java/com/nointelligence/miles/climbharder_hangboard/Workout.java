@@ -212,7 +212,24 @@ public class Workout extends AppCompatActivity {
                 totalTime += 25.0 / 1000;
                 currentIndex += 1;
                 if(currentIndex == workoutLength){
-                    saveWorkout();
+                    AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
+                    alertDialog.setMessage("Save to logbook?");
+
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    saveWorkout();
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
                     resetWorkout();
                 }else{
                     displayWorkoutActivity();
@@ -279,7 +296,7 @@ public class Workout extends AppCompatActivity {
     }
 
     private void saveWorkout(){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMM dd, yyyy");
         String date = sdf.format(new Date());
         databaseHelper.insertLogbook(name, date);
     }

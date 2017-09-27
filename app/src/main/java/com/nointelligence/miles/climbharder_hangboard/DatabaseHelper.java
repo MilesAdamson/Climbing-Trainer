@@ -182,7 +182,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()) {
             do {
-                tableEntires.add(cursor.getString(2) + ": " +replaceUnderscores(cursor.getString(1)));
+                tableEntires.add(cursor.getString(2) + ":\n " +replaceUnderscores(cursor.getString(1)));
             }
             while (cursor.moveToNext());
         }

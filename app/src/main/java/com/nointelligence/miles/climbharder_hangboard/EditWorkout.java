@@ -280,7 +280,7 @@ public class EditWorkout extends AppCompatActivity {
                         }
                     });
 
-            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Edit",
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Replace",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             removeAtPosition(position);
