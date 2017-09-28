@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.nointelligence.miles.climbharder_hangboard.Logbook">
 
-    <!-- view for AdMob Banner Ad -->
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

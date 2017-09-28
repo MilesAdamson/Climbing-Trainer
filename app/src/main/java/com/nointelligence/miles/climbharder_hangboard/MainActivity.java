@@ -84,10 +84,6 @@ public class MainActivity extends AppCompatActivity {
                 selectedActivity = new Intent(this, Logbook.class);
                 break;
 
-            case R.id.layoutAnalytics:
-                selectedActivity = new Intent(this, Analytics.class);
-                break;
-
         }
         startActivity(selectedActivity);
     }

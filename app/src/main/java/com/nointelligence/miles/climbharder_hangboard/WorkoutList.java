@@ -1,6 +1,5 @@
 package com.nointelligence.miles.climbharder_hangboard;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -49,7 +48,7 @@ public class WorkoutList extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
                 name = (String) (listView.getItemAtPosition(position));
-                askForAd();
+                askToStart();
             }
         });
 
@@ -159,7 +158,7 @@ public class WorkoutList extends AppCompatActivity {
         }
     }
 
-    private void askForAd(){
+    private void askToStart(){
         AlertDialog alertDialog = new AlertDialog.Builder(WorkoutList.this).create();
         alertDialog.setMessage("Start this workout?");
 

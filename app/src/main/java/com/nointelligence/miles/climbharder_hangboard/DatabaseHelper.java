@@ -109,22 +109,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<String>[] selectRoutine(String table){
         String tableNoSpaces = removeSpaces(table);
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + tableNoSpaces + ";", null);
-
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" + table + "';)", null);
         ArrayList<String> activities = new ArrayList<String>();
         ArrayList<String> durations = new ArrayList<String>();
         ArrayList<String> readable = new ArrayList<String>();
 
-        if(cursor.moveToFirst()) {
-            do {
-                activities.add(cursor.getString(0));
-                durations.add(cursor.getString(1));
-                readable.add(cursor.getString(0) + ": " + cursor.getString(1) + "s");
+        // If workout exists, populate the return arrays
+        if(cursor.getCount() != 0) {
+            cursor = db.rawQuery("SELECT * FROM " + tableNoSpaces + ";", null);
+            if (cursor.moveToFirst()) {
+                do {
+                    activities.add(cursor.getString(0));
+                    durations.add(cursor.getString(1));
+                    readable.add(cursor.getString(0) + ": " + cursor.getString(1) + "s");
+                }
+                while (cursor.moveToNext());
             }
-            while (cursor.moveToNext());
+            cursor.close();
         }
-        cursor.close();
-        return  new ArrayList[]{activities, durations, readable};
+        return new ArrayList[]{activities, durations, readable};
     }
 
     // Removes spaces and puts underscores instead. For db names
@@ -174,19 +177,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Returns the entire logbook table
-    public ArrayList<String> selectLogbook(){
+    public ArrayList<String>[] selectLogbook(){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + T3 + ";", null);
 
         ArrayList<String> tableEntires = new ArrayList<String>();
+        ArrayList<String> keys = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<String>();
 
         if(cursor.moveToFirst()) {
             do {
+                keys.add(cursor.getString(0));
+                names.add(replaceUnderscores(cursor.getString(1)));
                 tableEntires.add(cursor.getString(2) + ":\n " +replaceUnderscores(cursor.getString(1)));
             }
             while (cursor.moveToNext());
         }
         cursor.close();
-        return tableEntires;
+        return new ArrayList[] {tableEntires, keys, names};
+    }
+
+    public void deleteLogbookEntry(String key){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(T3, "_ID=?", new String[] { key });
     }
 }

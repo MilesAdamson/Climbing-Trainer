@@ -37,8 +37,9 @@ public class EditWorkout extends AppCompatActivity {
     ArrayList<String> durations;
 
     private String workoutName;
-    private final String[] holds = new String[]{"Jug", "Pinch", "Crimp", "Edge", "Sloper", "Pocket"};
+    private final String[] holds = new String[]{"Jug", "Pinch", "Crimp", "Edge", "Sloper", "Pocket", "Transgression"};
     private final String[] holdSizes = new String[]{"Huge", "Large", "Medium", "Small", "Micro"};
+    private final String[] transSizes = new String[]{"6mm", "7mm", "8mm", "10mm", "12mm", "14mm", "18mm", "20mm"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -324,7 +325,7 @@ public class EditWorkout extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     String inString = input.getText().toString().trim();
                     if (!inString.isEmpty()) {
-                        if (Integer.parseInt(inString) > 0 && Integer.parseInt(inString) <= 99) {
+                        if (Integer.parseInt(inString) > 0 && Integer.parseInt(inString) <= 999) {
                             setDuration(inString);
                             buildWorkoutActivity();
                             insertAtPosition(workoutActivity, duration, position);
@@ -364,7 +365,7 @@ public class EditWorkout extends AppCompatActivity {
 
         private void invalidInputAlert(){
             AlertDialog.Builder alert = new AlertDialog.Builder(EditWorkout.this);
-            alert.setTitle("Duration cannot be zero, or more than 99.");
+            alert.setTitle("Duration cannot be zero, or more than 999.");
             alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -375,8 +376,15 @@ public class EditWorkout extends AppCompatActivity {
         }
 
         private void selectSizeAlert(){
+            String[] dropdown;
+            if(hold == holds[6]){
+                dropdown = transSizes;
+            }else{
+                dropdown = holdSizes;
+            }
+
             final ArrayAdapter<String> adp = new ArrayAdapter<String>(EditWorkout.this,
-                    android.R.layout.simple_spinner_item, holdSizes);
+                    android.R.layout.simple_spinner_item, dropdown);
             final Spinner sp = new Spinner(EditWorkout.this);
             sp.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
             sp.setAdapter(adp);
