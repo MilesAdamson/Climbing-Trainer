@@ -266,7 +266,7 @@ public class WorkoutList extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(), "Alpha-numeric characters only.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Letters and spaces only.", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -280,10 +280,9 @@ public class WorkoutList extends AppCompatActivity {
     private boolean verifyInput(String input){
 
         char[] accepted = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-                           'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-                           'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-                           'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-                           '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '_'};
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '_'};
         Boolean accept;
         for(int i = 0; i < input.length(); i++){
             accept = false;
@@ -316,5 +315,10 @@ public class WorkoutList extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+    }
+
+    public void home(MenuItem item){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

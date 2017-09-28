@@ -6,6 +6,7 @@ import com.google.android.gms.ads.AdView;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.LinearLayout.LayoutParams;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 public class EditWorkout extends AppCompatActivity {
@@ -47,6 +50,7 @@ public class EditWorkout extends AppCompatActivity {
         setContentView(R.layout.activity_edit_workout);
 
         workoutName = getIntent().getStringExtra("name");
+
         // Load an ad into the AdMob banner view.
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
@@ -415,7 +419,7 @@ public class EditWorkout extends AppCompatActivity {
             public void run() {
                 AlertDialog alertDialog = new AlertDialog.Builder(EditWorkout.this).create();
                 alertDialog.setMessage("Tap the pencil to choose an option for a workout activity. " +
-                                "Tap the plus to add a new activity to the bottom. Your editing is saved as " +
+                        "Tap the plus to add a new activity to the bottom. Your editing is saved as " +
                         "you go.");
                 alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, "Ok",
                         new DialogInterface.OnClickListener() {
@@ -426,5 +430,40 @@ public class EditWorkout extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+    }
+
+    public void toWorkout(MenuItem item){
+        if(activities.size() > 0) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog alertDialog = new AlertDialog.Builder(EditWorkout.this).create();
+                    alertDialog.setMessage("Start this workout?");
+                    alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, "Yes",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent intent = new Intent(getApplicationContext(), Workout.class);
+                                    intent.putExtra("name", workoutName);
+                                    startActivity(intent);
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
+            });
+        }else{
+            Toast.makeText(this, "Workout is empty.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void home(MenuItem item){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

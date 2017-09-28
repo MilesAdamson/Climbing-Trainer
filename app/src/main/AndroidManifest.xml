@@ -43,10 +43,6 @@
             android:label="@string/title_activity_logbook"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Analytics"
-            android:label="@string/title_activity_analytics"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".EditWorkout"
             android:label="@string/title_activity_edit_workout"
             android:screenOrientation="portrait" />

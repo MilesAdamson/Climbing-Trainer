@@ -11,6 +11,14 @@
         android:onClick="help"/>
 
     <item
+        android:id="@+id/to_home"
+        android:orderInCategory="3"
+        android:title="@string/action_start"
+        android:icon="@mipmap/ic_home"
+        app:showAsAction="always"
+        android:onClick="home"/>
+
+    <item
         android:id="@+id/action_add_workout"
         android:title="@string/action_add_workout"
         app:showAsAction="always"

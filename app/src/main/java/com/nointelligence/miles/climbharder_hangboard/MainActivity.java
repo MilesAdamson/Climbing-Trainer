@@ -16,11 +16,6 @@ import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-    // Remove the below line after defining your own ad unit ID.
-    //private static final String TOAST_TEXT = "Test ads are being shown. "
-    //        + "To show live ads, replace the ad unit ID in res/values/strings.xml with your own ad unit ID.";
-
-    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +28,6 @@ public class MainActivity extends AppCompatActivity {
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
 
-        mInterstitialAd = newInterstitialAd();
-        loadInterstitial();
     }
 
     @Override
@@ -48,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
 
-        mInterstitialAd = newInterstitialAd();
-        loadInterstitial();
     }
 
     @Override
@@ -86,44 +77,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
         startActivity(selectedActivity);
-    }
-
-    private InterstitialAd newInterstitialAd() {
-        InterstitialAd interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(getString(R.string.interstitial_ad_unit_id));
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-
-            }
-
-            @Override
-            public void onAdClosed() {
-
-            }
-        });
-        return interstitialAd;
-    }
-
-    private void showInterstitial() {
-        // Show the ad if it's ready. Otherwise toast and reload the ad.
-        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        } else {
-            Toast.makeText(this, "Loading... Try again", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void loadInterstitial() {
-        // Disable the next level button and load the ad.
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
-        mInterstitialAd.loadAd(adRequest);
     }
 
 }

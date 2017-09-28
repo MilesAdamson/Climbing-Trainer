@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,7 +58,9 @@ public class Logbook extends AppCompatActivity {
                                 if(routine[0].size() == 0){
                                     Toast.makeText(getApplicationContext(), "This workout no longer exists.", Toast.LENGTH_SHORT).show();
                                 }else{
-
+                                    Intent intent = new Intent(getApplicationContext(), EditWorkout.class);
+                                    intent.putExtra("name", name);
+                                    startActivity(intent);
                                 }
                                 dialog.dismiss();
                             }
@@ -110,4 +113,25 @@ public class Logbook extends AppCompatActivity {
         logbook.setAdapter(arrayAdapter);
     }
 
+    public void help(MenuItem item){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(Logbook.this).create();
+                alertDialog.setMessage("Tap an entry to view the workout, or delete the entry.");
+                alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, "Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
+
+    public void home(MenuItem item){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }

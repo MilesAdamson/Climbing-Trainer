@@ -2,10 +2,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.nointelligence.miles.climbharder_hangboard.Logbook">
+
+    <item
+        android:id="@+id/to_home"
+        android:orderInCategory="3"
+        android:title="@string/action_start"
+        android:icon="@mipmap/ic_home"
+        app:showAsAction="always"
+        android:onClick="home"/>
+
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"
+        android:onClick="help"
         android:icon="@mipmap/ic_help"
         app:showAsAction="always" />
+
 </menu>

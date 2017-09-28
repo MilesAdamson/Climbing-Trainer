@@ -265,6 +265,11 @@ public class Workout extends AppCompatActivity {
         });
     }
 
+    public void home(MenuItem item){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     // Gives a three beep countdown to the finish of a workout activity, and a final beep
     private void beep(long millisUntilFinished, boolean lastBeep){
         AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);

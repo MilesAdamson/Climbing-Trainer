@@ -109,7 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public ArrayList<String>[] selectRoutine(String table){
         String tableNoSpaces = removeSpaces(table);
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" + table + "';)", null);
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableNoSpaces + "';)", null);
         ArrayList<String> activities = new ArrayList<String>();
         ArrayList<String> durations = new ArrayList<String>();
         ArrayList<String> readable = new ArrayList<String>();
