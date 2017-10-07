@@ -25,23 +25,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String T3_C2 = "date";
 
     private static final String TEXT = " TEXT";
-    private static final String INT = " INTEGER";
+    private static final String KEY = " _ID INTEGER PRIMARY KEY AUTOINCREMENT, ";
     private static final String UNIQUE = " UNIQUE";
     private static final String END = ");";
 
+    // Indexes for the array returned by selectRoutine
+    public static final int ACTIVITIES = 0;
+    public static final int DURATIONS = 1;
+    public static final int READABLES = 2;
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super (context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase database) {
         database.execSQL("CREATE TABLE " + T1 + " (" + T1_C1 + TEXT + UNIQUE + END);
-
-        database.execSQL("CREATE TABLE " + T3 + " ("
-                + "_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + T3_C1 + TEXT + ", "
-                + T3_C2 + TEXT + END);
+        database.execSQL("CREATE TABLE " + T3 + " (" + KEY + T3_C1 + TEXT + ", " + T3_C2 + TEXT + END);
     }
 
     @Override
@@ -64,18 +64,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (result == -1) {
             return false;
         } else {
-            db.execSQL("CREATE TABLE IF NOT EXISTS " + nameNoSpace + " (" + T2_C1 + TEXT + ", " + T2_C2 + TEXT + END);
+            db.execSQL("CREATE TABLE IF NOT EXISTS "
+                    + nameNoSpace + " (" + T2_C1 + TEXT + ", " + T2_C2 + TEXT + END);
             return true;
         }
     }
 
-    // Returns a String ArrayList of all workout names
+    // Returns a String ArrayList of all workout namesList
     public ArrayList<String> selectAllWorkouts() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT " + T1_C1 + " FROM " + T1 + ";", null);
-        ArrayList<String> nameList = new ArrayList<String>();
+        ArrayList<String> nameList = new ArrayList<>();
 
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 nameList.add(replaceUnderscores(cursor.getString(0)));
             }
@@ -93,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + rowNameNoSpaces);
     }
 
-    // Adds a list of entries into a workout routine
+    // Adds a list of entriesList into a workout routine
     public void fillWorkout(String table, String[] names, String[] durations){
         String tableNoSpaces = removeSpaces(table);
         SQLiteDatabase db = this.getWritableDatabase();
@@ -105,60 +106,68 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    // Returns the activities, durations and a formatted string
+    // Returns the activities, durations and a human readable string for the workout.
+    // If the workout doesn't exist, the lists returned are empty.
     public ArrayList<String>[] selectRoutine(String table){
         String tableNoSpaces = removeSpaces(table);
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableNoSpaces + "';)", null);
-        ArrayList<String> activities = new ArrayList<String>();
-        ArrayList<String> durations = new ArrayList<String>();
-        ArrayList<String> readable = new ArrayList<String>();
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='"
+                + tableNoSpaces + "';)", null);
+        ArrayList<String> activities = new ArrayList<>();
+        ArrayList<String> durations = new ArrayList<>();
+        ArrayList<String> readable = new ArrayList<>();
 
-        // If workout exists, populate the return arrays
+        // If workout exists, populate the return arrays.
         if(cursor.getCount() != 0) {
             cursor = db.rawQuery("SELECT * FROM " + tableNoSpaces + ";", null);
             if (cursor.moveToFirst()) {
                 do {
-                    activities.add(cursor.getString(0));
-                    durations.add(cursor.getString(1));
-                    readable.add(cursor.getString(0) + ": " + cursor.getString(1) + "s");
+                    activities.add(cursor.getString(ACTIVITIES));
+                    durations.add(cursor.getString(DURATIONS));
+                    readable.add(cursor.getString(ACTIVITIES) + ": " +
+                            cursor.getString(DURATIONS) + "s");
                 }
                 while (cursor.moveToNext());
             }
             cursor.close();
         }
+
         return new ArrayList[]{activities, durations, readable};
     }
 
-    // Removes spaces and puts underscores instead. For db names
+    // Removes spaces and puts underscores instead, since table names cannot
+    // have spaces in them.
     private String removeSpaces(String input){
         String space = " ";
         String underscore = "_";
         char[] result = new char[input.length()];
-        for(int i = 0; i < input.length(); i++){
-            if(input.charAt(i) == space.charAt(0)){
+        for (int i = 0; i < input.length(); i++){
+            if (input.charAt(i) == space.charAt(0)){
                 result[i] = underscore.charAt(0);
-            }else{
+            } else {
                 result[i] = input.charAt(i);
             }
         }
         return new String(result);
     }
 
+    // Replaces underscores with spaces again for the text user sees
     private String replaceUnderscores(String input){
         String space = " ";
         String underscore = "_";
         char[] result = new char[input.length()];
-        for(int i = 0; i < input.length(); i++){
-            if(input.charAt(i) == underscore.charAt(0)){
+        for (int i = 0; i < input.length(); i++){
+            if (input.charAt(i) == underscore.charAt(0)){
                 result[i] = space.charAt(0);
-            }else{
+            } else {
                 result[i] = input.charAt(i);
             }
         }
         return new String(result);
     }
 
+    // Inserts a row into logbook table, which is the workout name
+    // and workout date strings. Date string should be pre-formatted
     public boolean insertLogbook(String name, String date){
         String nameNoSpace = removeSpaces(name);
         SQLiteDatabase db = this.getWritableDatabase();
@@ -181,11 +190,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + T3 + ";", null);
 
-        ArrayList<String> tableEntires = new ArrayList<String>();
-        ArrayList<String> keys = new ArrayList<String>();
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> tableEntires = new ArrayList<>();
+        ArrayList<String> keys = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
 
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
                 keys.add(cursor.getString(0));
                 names.add(replaceUnderscores(cursor.getString(1)));
@@ -197,6 +206,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return new ArrayList[] {tableEntires, keys, names};
     }
 
+    // Deletes an entry in the logbook table based on its id
     public void deleteLogbookEntry(String key){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(T3, "_ID=?", new String[] { key });
