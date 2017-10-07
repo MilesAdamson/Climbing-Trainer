@@ -3,18 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context="com.nointelligence.miles.climbharder_hangboard.EditWorkout">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorLight"
+        android:background="@color/colorPrimary"
         android:orientation="vertical">
 
         <ListView
             android:id="@+id/listRoutine"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:layout_marginBottom="50dp"
             android:longClickable="true" />

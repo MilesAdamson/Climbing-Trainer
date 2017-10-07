@@ -23,13 +23,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View;
+
 import java.util.ArrayList;
 
 public class WorkoutList extends AppCompatActivity {
 
     ListView listView;
     DatabaseHelper databaseHelper;
-    String name;
+    String workoutName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class WorkoutList extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
-                name = (String) (listView.getItemAtPosition(position));
+                workoutName = (String) (listView.getItemAtPosition(position));
                 askToStart();
             }
         });
@@ -55,7 +56,6 @@ public class WorkoutList extends AppCompatActivity {
         populateListViewFromDB();
     }
 
-    // Show changes made to workout list
     @Override
     protected void onResume(){
         super.onResume();
@@ -64,18 +64,13 @@ public class WorkoutList extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_workouts, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
             return true;
         }
@@ -83,11 +78,13 @@ public class WorkoutList extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
-        private ArrayList<String> list = new ArrayList<String>();
+    // custom adapter class which has a textView and imageView,
+    // the imageview has both onClick and longClickable
+    public class WorkoutListAdapter extends BaseAdapter implements ListAdapter {
+        private ArrayList<String> list = new ArrayList<>();
         private Context context;
 
-        public MyCustomAdapter(ArrayList<String> list, Context context) {
+        public WorkoutListAdapter(ArrayList<String> list, Context context) {
             this.list = list;
             this.context = context;
         }
@@ -111,8 +108,9 @@ public class WorkoutList extends AppCompatActivity {
         public View getView(final int position, View convertView, ViewGroup parent) {
             View view = convertView;
             if (view == null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflater.inflate(R.layout.row, null);
+                LayoutInflater inflater =
+                        (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = inflater.inflate(R.layout.workout_editable_item, null);
             }
 
             TextView listItemText = (TextView) view.findViewById(R.id.list_item_string);
@@ -154,29 +152,33 @@ public class WorkoutList extends AppCompatActivity {
                     return true; // Do not also have onclick run
                 }
             });
+
             return view;
         }
     }
 
+    // an alert dialog which asks the user if they want to begin the workout they selected
     private void askToStart(){
         AlertDialog alertDialog = new AlertDialog.Builder(WorkoutList.this).create();
-        alertDialog.setMessage("Start this workout?");
+        alertDialog.setMessage(getString(R.string.message_start_question));
 
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        if(databaseHelper.selectRoutine(name)[0].size() > 0) {
+                        if(databaseHelper.selectRoutine(workoutName)[0].size() > 0) {
                             Intent intent = new Intent(getApplicationContext(), Workout.class);
-                            intent.putExtra("name", name);
+                            intent.putExtra("workoutName", workoutName);
                             startActivity(intent);
                         }else{
-                            Toast.makeText(getApplicationContext(), "Workout is empty.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.error_empty),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.option_no),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -186,21 +188,22 @@ public class WorkoutList extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private void askForEdit(final String name){
+    // an alert dialog which asks the user if they want to edit the workout they selected
+    private void askForEdit(final String workoutName){
         AlertDialog alertDialog = new AlertDialog.Builder(WorkoutList.this).create();
-        alertDialog.setMessage("Edit this workout?");
+        alertDialog.setMessage(getString(R.string.message_edit_workout));
 
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         Intent intent = new Intent(getApplicationContext(), EditWorkout.class);
-                        intent.putExtra("name", name);
+                        intent.putExtra("workoutName", workoutName);
                         startActivity(intent);
                     }
                 });
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.option_no),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -209,11 +212,12 @@ public class WorkoutList extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // an alert dialog which asks the user if they want to delete the workout they selected
     private void askForDelete(final String name){
         AlertDialog alertDialog = new AlertDialog.Builder(WorkoutList.this).create();
-        alertDialog.setMessage("Delete this workout?");
+        alertDialog.setMessage(getString(R.string.message_delete_workout));
 
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         databaseHelper.deleteWorkout(name);
@@ -222,7 +226,7 @@ public class WorkoutList extends AppCompatActivity {
                     }
                 });
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.option_no),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -231,42 +235,49 @@ public class WorkoutList extends AppCompatActivity {
         alertDialog.show();
     }
 
+    // updates the listView with data in the database
     private void populateListViewFromDB(){
         ArrayList<String> listItems = databaseHelper.selectAllWorkouts();
-        MyCustomAdapter adapter = new MyCustomAdapter(listItems, this);
+        WorkoutListAdapter adapter = new WorkoutListAdapter(listItems, this);
         listView.setAdapter(adapter);
     }
 
+    // alert dialog which asks the user for the new workouts name. If they enter a
+    // valid workout name, they are taken to the EditWorkout activity to create it
     public void addWorkout(MenuItem item){
         AlertDialog.Builder alert = new AlertDialog.Builder(WorkoutList.this);
-        alert.setTitle("Enter name for new workout:");
-        final EditText input = new EditText(WorkoutList.this);
-        input.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
-        alert.setView(input);
+        alert.setTitle(getString(R.string.message_enter_name));
+        final EditText editText = new EditText(WorkoutList.this);
+        editText.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
 
-        alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+        alert.setView(editText);
+        alert.setPositiveButton(getString(R.string.option_add), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String name = input.getText().toString();
+                String inputName = editText.getText().toString();
 
-                if(name.trim().length() == 0){
+                if (inputName.trim().length() == 0){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getApplicationContext(), "Cannot be blank.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.error_blank),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     });
-                }else {
-                    if (verifyInput(name)) {
-                        databaseHelper.insertWorkout(name);
+                } else {
+                    if (verifyInput(inputName)) {
+                        databaseHelper.insertWorkout(inputName);
                         Intent intent = new Intent(getApplicationContext(), EditWorkout.class);
-                        intent.putExtra("name", name);
+                        intent.putExtra("workoutName", inputName);
                         startActivity(intent);
                     } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(), "Letters and spaces only.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),
+                                        getString(R.string.error_input),
+                                        Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -276,37 +287,36 @@ public class WorkoutList extends AppCompatActivity {
         alert.show();
     }
 
-    // Ensure alphanumeric table names
+    // Ensure alphanumeric table namesList
     private boolean verifyInput(String input){
-
         char[] accepted = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
                 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ' ', '_'};
         Boolean accept;
-        for(int i = 0; i < input.length(); i++){
+        for (int i = 0; i < input.length(); i++){
             accept = false;
-            for(int j = 0; j < accepted.length; j++){
-                if(input.charAt(i) == accepted[j]){
+            for (int j = 0; j < accepted.length; j++){
+                if (input.charAt(i) == accepted[j]){
                     accept = true; // If the char is found, accept this character
                 }
             }
-            if(!accept){
+            if (!accept){
                 return false; // If any character fails entirely, string fails
             }
         }
         return true;
     }
 
+    // gives alert dialog with help string
     public void help(MenuItem item){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 AlertDialog alertDialog = new AlertDialog.Builder(WorkoutList.this).create();
-                alertDialog.setMessage("Tap the name of a workout to begin it. To create a workout, " +
-                        "tap the plus button. To edit one, tap the pencil. To delete a workout, tap " +
-                        "and hold the pencil.");
-                alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, "Ok",
+                alertDialog.setMessage(getString(R.string.help_workout_list));
+                alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE,
+                        getString(R.string.option_ok),
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -317,6 +327,7 @@ public class WorkoutList extends AppCompatActivity {
         });
     }
 
+    // sends user to MainActivity
     public void home(MenuItem item){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

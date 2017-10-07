@@ -51,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(database);
     }
 
-    // Inserts a row into the workouts table
+    // Inserts a workout_editable_item into the workouts table
     public boolean insertWorkout(String name) {
         String nameNoSpace = removeSpaces(name);
         SQLiteDatabase db = this.getWritableDatabase();
@@ -166,7 +166,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return new String(result);
     }
 
-    // Inserts a row into logbook table, which is the workout name
+    // Inserts a workout_editable_item into logbook table, which is the workout name
     // and workout date strings. Date string should be pre-formatted
     public boolean insertLogbook(String name, String date){
         String nameNoSpace = removeSpaces(name);

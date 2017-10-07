@@ -7,51 +7,44 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Timer;
-import java.util.logging.LogRecord;
 
 public class Workout extends AppCompatActivity {
 
-    TextView textTimer;
+    static final String START_TIME = "5:00";
+    static final int PB_MAX = 1000; // number of progress bar ticks
+
+    boolean started = false;
     double totalTime = 0;
-    ProgressBar progressBar;
-    DatabaseHelper databaseHelper;
-    String name;
-    int PBmax = 1000; // 1000 ticks
     int currentIndex = 0;
     int totalWorkoutTime = 0;
     int workoutLength;
+    int beepCount = 3;
+    String workoutName;
     ArrayList<String> activities;
     ArrayList<String> durations;
     ArrayList<String> readables;
-    boolean started = false;
+    TextView textTimer;
     ListView workoutList;
     CountDownTimer currentTimer;
-    int beepCount = 3;
+    ProgressBar progressBar;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,30 +52,31 @@ public class Workout extends AppCompatActivity {
         setContentView(R.layout.activity_workout);
 
         textTimer = (TextView)findViewById(R.id.textViewTimer);
+        textTimer.setText(START_TIME);
         progressBar = (ProgressBar)findViewById(R.id.progressBarPercent);
-        progressBar.setMax(PBmax);
+        progressBar.setMax(PB_MAX);
         progressBar.setProgress(0);
         databaseHelper = new DatabaseHelper(this);
-        name = getIntent().getStringExtra("name");
-        ArrayList<String>[] lists = databaseHelper.selectRoutine(name);
-        activities = lists[0];
-        durations = lists[1];
+        workoutName = getIntent().getStringExtra("workoutName");
+        ArrayList<String>[] lists = databaseHelper.selectRoutine(workoutName);
+        activities = lists[DatabaseHelper.ACTIVITIES];
+        durations = lists[DatabaseHelper.DURATIONS];
+        readables = lists[DatabaseHelper.READABLES];
         workoutLength = activities.size();
 
-        for(int i = 0; i < durations.size(); i++){
+        for (int i = 0; i < durations.size(); i++){
             totalWorkoutTime += Integer.parseInt(durations.get(i));
         }
 
         currentTimer = null;
 
-        // Add some blank list items so scrolling near the top works
-        readables = lists[2];
-        readables.add(0, "Initial Countdown");
+        // Add blank list items so scrolling near the top works
+        readables.add(0, getString(R.string.message_initial));
         readables.add(0, "");
         readables.add(0, "");
         readables.add(0, "");
         readables.add(0, "");
-        readables.add("Last one!");
+        readables.add(getString(R.string.message_finished));
 
         // Load an ad into the AdMob banner view.
         AdView adView = (AdView) findViewById(R.id.adView);
@@ -91,7 +85,7 @@ public class Workout extends AppCompatActivity {
         adView.loadAd(adRequest);
 
         workoutList = (ListView)findViewById(R.id.workoutList);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this,
                 R.layout.workout_list_item,
                 R.id.textItem,
@@ -104,7 +98,7 @@ public class Workout extends AppCompatActivity {
         workoutList.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    return true; // Indicates that this has been handled by you and will not be forwarded further.
+                    return true; // Indicates that this has been handled
                 }
                 return false;
             }
@@ -114,7 +108,7 @@ public class Workout extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        if(currentTimer != null) {
+        if (currentTimer != null) {
             currentTimer.cancel();
         }
     }
@@ -122,16 +116,12 @@ public class Workout extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_workout, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
@@ -175,7 +165,7 @@ public class Workout extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progressBar.setProgress((int)(PBmax*(double)current/(double)max));
+                progressBar.setProgress((int)(PB_MAX *(double)current/(double)max));
             }
         });
     }
@@ -202,7 +192,7 @@ public class Workout extends AppCompatActivity {
                 String timeStamp = String.format ("%.1f", (double)millisUntilFinished / 1000);
                 textTimer.setText(timeStamp);
                 // Do not beep for very short activities
-                if(len >= 3000) {
+                if (len >= 3000) {
                     beep(millisUntilFinished, false);
                 }
             }
@@ -213,9 +203,9 @@ public class Workout extends AppCompatActivity {
                 currentIndex += 1;
                 if(currentIndex == workoutLength){
                     AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
-                    alertDialog.setMessage("Save to logbook?");
+                    alertDialog.setMessage(getString(R.string.message_save));
 
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes",
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     saveWorkout();
@@ -223,7 +213,7 @@ public class Workout extends AppCompatActivity {
                                 }
                             });
 
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No",
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.option_no),
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -231,7 +221,7 @@ public class Workout extends AppCompatActivity {
                             });
                     alertDialog.show();
                     resetWorkout();
-                }else{
+                } else {
                     displayWorkoutActivity();
                 }
             }
@@ -244,30 +234,8 @@ public class Workout extends AppCompatActivity {
         workoutList.setSelection(4);
         currentTimer.cancel();
         currentTimer = null;
-        textTimer.setText("5:00");
+        textTimer.setText(START_TIME);
         zeroPB();
-    }
-
-    public void help(MenuItem item){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
-                alertDialog.setMessage("Tap the stopwatch to begin. Tap it again to reset the workout.");
-                alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, "Ok",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                alertDialog.show();
-            }
-        });
-    }
-
-    public void home(MenuItem item){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     // Gives a three beep countdown to the finish of a workout activity, and a final beep
@@ -275,7 +243,7 @@ public class Workout extends AppCompatActivity {
         AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
         currentVolume = (int)((double)currentVolume * 100.0 / 15.0);
-        if(!lastBeep) {
+        if (!lastBeep) {
             if (millisUntilFinished <= 3000 && beepCount == 3) {
                 ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, currentVolume);
                 toneG.startTone(ToneGenerator.TONE_CDMA_ONE_MIN_BEEP, 100);
@@ -293,16 +261,41 @@ public class Workout extends AppCompatActivity {
                 toneG.startTone(ToneGenerator.TONE_CDMA_ONE_MIN_BEEP, 100);
                 beepCount--;
             }
-        }else{
+        } else {
             beepCount = 3;
             ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, currentVolume);
             toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
         }
     }
 
+    // Saves an entry to the logbook table with the current date in a string
     private void saveWorkout(){
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE MMM dd, yyyy");
         String date = sdf.format(new Date());
-        databaseHelper.insertLogbook(name, date);
+        databaseHelper.insertLogbook(workoutName, date);
+    }
+
+    // gives alert dialog with help string
+    public void help(MenuItem item){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
+                alertDialog.setMessage(getString(R.string.help_workout));
+                alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
+            }
+        });
+    }
+
+    // called by the menu bar, sends user to MainActivity
+    public void home(MenuItem item){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

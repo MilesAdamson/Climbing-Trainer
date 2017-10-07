@@ -14,7 +14,7 @@
     <color name="colorAnalyticsDark">#fcb8f8</color>
     <color name="colorPurchasesDark">#abfca9</color>
 
-    <color name="colorLight">#efefef</color>
-    <color name="colorLight2">#b2b2b2</color>
+    <color name="colorLight">#ffffff</color>
+    <color name="colorLight2">#d6d6d6</color>
 
 </resources>

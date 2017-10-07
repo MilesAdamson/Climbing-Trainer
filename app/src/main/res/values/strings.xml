@@ -5,29 +5,84 @@
     <string name="action_add_workout">Add Blank Workout</string>
     <string name="action_start">Start Workout</string>
 
-    <string name="workouts_label">Workouts</string>
-    <string name="logbook_label">Logbook</string>
+    <string name="label_workouts">Workouts</string>
+    <string name="label_logbook">Logbook</string>
 
-    <string name="start_countdown">Start</string>
-    <string name="timer">5:00</string>
-    <string name="entry_label_1">Initial Countdown</string>
+    <string name="type_hang">Hang</string>
+    <string name="type_rest">Rest</string>
+
+    <string name="message_start">Start</string>
+    <string name="message_initial">Initial Countdown</string>
+    <string name="message_finished">Last one!</string>
+    <string name="message_save">Save to logbook?</string>
+    <string name="message_start_question">Start this workout?</string>
+    <string name="message_edit_workout">Edit this workout?"</string>
+    <string name="message_delete_workout">Delete this workout?</string>
+    <string name="message_enter_name">Enter name for new workout:</string>
+    <string name="message_entry">What would you like to do?</string>
+    <string name="message_select_hold">Select hold type.</string>
+    <string name="message_enter_duration">Enter the duration in seconds.</string>
+    <string name="message_select_type">Add rest or hang?</string>
+    <string name="message_select_size">Select hold size.</string>
+
+    <string name="option_view">View Workout</string>
+    <string name="option_delete">Delete</string>
+    <string name="option_ok">OK</string>
+    <string name="option_no">No</string>
+    <string name="option_insert">Insert below</string>
+    <string name="option_replace">Replace</string>
+    <string name="option_add">Add</string>
+
+    <string name="title_activity_logbook">Logbook</string>
+    <string name="title_activity_edit_workout">Edit</string>
+    <string name="title_activity_workout">Workout</string>
+    <string name="title_activity_workouts">Workouts</string>
+
+    <string name="help_workout">Tap the stopwatch to begin. Tap it again to reset the workout.</string>
+    <string name="help_workout_list">"Tap the name of a workout to begin it. To create a workout, tap the plus button. To edit one, tap the pencil. To delete a workout, tap and hold the pencil."</string>
+    <string name="help_logbook">Tap an entry to view the workout, or delete the entry.</string>
+    <string name="help_edit">"Tap the pencil to choose an option for a workout activity. Tap the plus to add a new activity to the bottom. Editing is saved as you go."</string>
+
+    <string name="error_empty">Workout is empty.</string>
+    <string name="error_blank">Cannot be blank.</string>
+    <string name="error_input">Letters and spaces only.</string>
+    <string name="error_exist">This workout no longer exists.</string>
+    <string name="error_duration">Duration cannot be zero, or more than 999.</string>
+
+    <string-array name="array_transgression">
+        <item>6mm</item>
+        <item>7mm</item>
+        <item>8mm</item>
+        <item>10mm</item>
+        <item>12mm</item>
+        <item>14mm</item>
+        <item>18mm</item>
+        <item>20mm</item>
+    </string-array>
+
+    <string-array name="array_sizes">
+        <item>Huge</item>
+        <item>Large</item>
+        <item>Medium</item>
+        <item>Small</item>
+        <item>Micro</item>
+    </string-array>
+
+    <string-array name="array_types">
+        <item>Jug</item>
+        <item>Pinch</item>
+        <item>Crimp</item>
+        <item>Edge</item>
+        <item>Sloper</item>
+        <item>Pocket</item>
+        <item>Transgression</item>
+    </string-array>
 
     <!-- -
         This is an ad unit ID for a banner test ad. Replace with your own banner ad unit id.
         For more information, see https://support.google.com/admob/answer/3052638
     <!- -->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="title_activity_workouts">Workouts</string>
 
-    <string name="interstitial_ad_sample">Interstitial Ad Sample</string>
-    <!-- -
-        This is an ad unit ID for an interstitial test ad. Replace with your own interstitial ad unit id.
-        For more information, see https://support.google.com/admob/answer/3052638
-    <!- -->
-    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
-
-    <string name="title_activity_logbook">Logbook</string>
-    <string name="title_activity_edit_workout">Edit</string>
-    <string name="title_activity_workout">Workout</string>
 
 </resources>
