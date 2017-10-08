@@ -17,6 +17,7 @@
     <string name="message_save">Save to logbook?</string>
     <string name="message_start_question">Start this workout?</string>
     <string name="message_edit_workout">Edit this workout?"</string>
+    <string name="message_view_workout">View this workout?"</string>
     <string name="message_delete_workout">Delete this workout?</string>
     <string name="message_enter_name">Enter name for new workout:</string>
     <string name="message_entry">What would you like to do?</string>
@@ -39,7 +40,7 @@
     <string name="title_activity_workouts">Workouts</string>
 
     <string name="help_workout">Tap the stopwatch to begin. Tap it again to reset the workout.</string>
-    <string name="help_workout_list">"Tap the name of a workout to begin it. To create a workout, tap the plus button. To edit one, tap the pencil. To delete a workout, tap and hold the pencil."</string>
+    <string name="help_workout_list">"Tap the name of a workout to begin it. To create a workout, tap the plus button. To edit one, tap the pencil. To delete a workout, tap and hold the pencil. You cannot delete or edit built in workouts."</string>
     <string name="help_logbook">Tap an entry to view the workout, or delete the entry.</string>
     <string name="help_edit">"Tap the pencil to choose an option for a workout activity. Tap the plus to add a new activity to the bottom. Editing is saved as you go."</string>
 
@@ -48,6 +49,14 @@
     <string name="error_input">Letters and spaces only.</string>
     <string name="error_exist">This workout no longer exists.</string>
     <string name="error_duration">Duration cannot be zero, or more than 999.</string>
+    <string name="error_cant_edit">You may not edit the built in workouts.</string>
+
+    <string-array name="workout_titles">
+        <item>One Arm Hangs by Andrew Funk</item>
+        <item>Beginner Routine by Training Beta</item>
+        <item>Intermediate Workout by Crux Crush</item>
+        <item>Slow Warm Up by Miles Adamson</item>
+    </string-array>
 
     <string-array name="array_transgression">
         <item>6mm</item>

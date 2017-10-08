@@ -39,6 +39,7 @@ public class EditWorkout extends AppCompatActivity {
     ArrayList<String> activities;
     ArrayList<String> durations;
 
+    private boolean editable;
     private String workoutName;
     private String[] holdTypes;
     private String[] holdSizes;
@@ -50,6 +51,7 @@ public class EditWorkout extends AppCompatActivity {
         setContentView(R.layout.activity_edit_workout);
 
         workoutName = getIntent().getStringExtra("workoutName");
+        editable = getIntent().getBooleanExtra("editable", true); // default value is true
         holdTypes = getResources().getStringArray(R.array.array_types);
         holdSizes = getResources().getStringArray(R.array.array_sizes);
         transSizes = getResources().getStringArray(R.array.array_transgression);
@@ -62,14 +64,7 @@ public class EditWorkout extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(this);
         listView = (ListView) findViewById(R.id.listRoutine);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
-                //
-            }
-        });
         populateListViewFromDB();
-
     }
 
     @Override
@@ -122,17 +117,26 @@ public class EditWorkout extends AppCompatActivity {
             }
 
             TextView listItemText = (TextView) view.findViewById(R.id.list_item_string);
-            listItemText.setText(list.get(position));
+            String itemName = list.get(position);
+            listItemText.setText(itemName);
+
             final ImageView imageEdit = (ImageView) view.findViewById(R.id.image_edit);
 
-            imageEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Alerts alerts = new Alerts(position);
-                    alerts.entryAlert();
-                    notifyDataSetChanged();
-                }
-            });
+            // if this is a built in workout, do not show the edit button
+            // users cannot change built in workouts
+            if (editable) {
+                imageEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Alerts alerts = new Alerts(position);
+                        alerts.entryAlert();
+                        notifyDataSetChanged();
+                    }
+                });
+            } else {
+                imageEdit.setClickable(false);
+                imageEdit.setVisibility(View.INVISIBLE);
+            }
 
             return view;
         }
@@ -397,8 +401,12 @@ public class EditWorkout extends AppCompatActivity {
     // Creates an alerts object which takes the user through a series of
     // alert dialogs to input a new workout item
     public void addWorkoutItem(MenuItem item){
-        Alerts alerts = new Alerts(activities.size() - 1);
-        alerts.selectTypeAlert();
+        if (editable) {
+            Alerts alerts = new Alerts(activities.size() - 1);
+            alerts.selectTypeAlert();
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.error_cant_edit, Toast.LENGTH_LONG).show();
+        }
     }
 
     // goes to the Workout activity with the selected workout as an intent extra string

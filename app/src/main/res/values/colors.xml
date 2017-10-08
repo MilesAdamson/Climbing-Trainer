@@ -4,17 +4,10 @@
     <color name="colorPrimaryDark">#212121</color>
     <color name="colorAccent">#3047ba</color>
 
-    <color name="colorWorkouts">#fff7ea</color>
-    <color name="colorLogbook">#d8f6ff</color>
-    <color name="colorAnalytics">#fcd9fa</color>
-    <color name="colorPurchases">#deffdd</color>
-
-    <color name="colorWorkoutsDark">#ffe2b5</color>
-    <color name="colorLogbookDark">#bff0ff</color>
-    <color name="colorAnalyticsDark">#fcb8f8</color>
-    <color name="colorPurchasesDark">#abfca9</color>
-
     <color name="colorLight">#ffffff</color>
     <color name="colorLight2">#d6d6d6</color>
+
+    <color name="colorLightBlue">#e6f7ff</color>
+    <color name="colorBlue">#ccefff</color>
 
 </resources>

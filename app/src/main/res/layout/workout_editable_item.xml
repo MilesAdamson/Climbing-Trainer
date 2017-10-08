@@ -16,7 +16,7 @@
         android:id="@+id/list_item_string"
         android:text="Example Crimp Workout by Miles Adamson"
         android:textColor="@color/colorPrimaryDark"
-        android:layout_width="200dp"
+        android:layout_width="250dp"
         android:layout_height="100dp"
         android:gravity="left|center"
         android:paddingLeft="8dp"

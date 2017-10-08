@@ -5,6 +5,7 @@ import com.google.android.gms.ads.AdView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,9 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
+
+        // inserts the built in workouts if they don't already exist
+        new BuiltInWorkouts(this).addDefaultWorkouts();
 
     }
 

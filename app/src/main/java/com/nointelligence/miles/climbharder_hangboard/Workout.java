@@ -148,14 +148,14 @@ public class Workout extends AppCompatActivity {
                 updatePB(countdown, countdown - (int)millisUntilFinished);
                 String timeStamp = String.format ("%.1f", (double)millisUntilFinished / 1000);
                 textTimer.setText(timeStamp);
-                beep(millisUntilFinished, false);
+                //beep(millisUntilFinished, false);
             }
 
             // Start workout once initial countdown is done
             public void onFinish() {
                 String timeStamp = String.format ("%.1f", (double)5000 / 1000);
                 textTimer.setText(timeStamp);
-                beep(0, true);
+               // beep(0, true);
                 displayWorkoutActivity();
             }
         }.start();
@@ -193,12 +193,12 @@ public class Workout extends AppCompatActivity {
                 textTimer.setText(timeStamp);
                 // Do not beep for very short activities
                 if (len >= 3000) {
-                    beep(millisUntilFinished, false);
+                    //beep(millisUntilFinished, false);
                 }
             }
 
             public void onFinish() {
-                beep(0, true);
+                //beep(0, true);
                 totalTime += 25.0 / 1000;
                 currentIndex += 1;
                 if(currentIndex == workoutLength){

@@ -114,45 +114,75 @@ public class WorkoutList extends AppCompatActivity {
             }
 
             TextView listItemText = (TextView) view.findViewById(R.id.list_item_string);
-            listItemText.setText(list.get(position));
-            final ImageView imageEdit = (ImageView) view.findViewById(R.id.image_edit);
+            String itemName = list.get(position);
+            listItemText.setText(itemName);
 
-            imageEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TextView textView = null;
-                    ViewGroup row = (ViewGroup) v.getParent();
-                    for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
-                        View view = row.getChildAt(itemPos);
-                        if (view instanceof TextView) {
-                            textView = (TextView) view; //Found
-                            break;
+            // If it is built in, user can view the workout but not edit it or delete it
+            if (checkIfBuiltIn(itemName)){
+                final ImageView imageEdit = (ImageView) view.findViewById(R.id.image_edit);
+                imageEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView textView = null;
+                        ViewGroup row = (ViewGroup) v.getParent();
+                        for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
+                            View view = row.getChildAt(itemPos);
+                            if (view instanceof TextView) {
+                                textView = (TextView) view; //Found
+                                break;
+                            }
                         }
+                        askForEdit(textView.getText().toString(), false);
+                        notifyDataSetChanged();
                     }
-                    askForEdit(textView.getText().toString());
-                    notifyDataSetChanged();
-                }
-            });
+                });
 
-            imageEdit.setLongClickable(true);
-            imageEdit.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    // Find the textView which contains the string to query db with
-                    TextView textView = null;
-                    ViewGroup row = (ViewGroup) v.getParent();
-                    for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
-                        View view = row.getChildAt(itemPos);
-                        if (view instanceof TextView) {
-                            textView = (TextView) view; //Found
-                            break;
+                imageEdit.setLongClickable(false);
+
+                // if it's not built in, they can delete the workout with long click
+            } else {
+                final ImageView imageEdit = (ImageView) view.findViewById(R.id.image_edit);
+                imageEdit.setLongClickable(false);
+                imageEdit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView textView = null;
+                        ViewGroup row = (ViewGroup) v.getParent();
+                        for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
+                            View view = row.getChildAt(itemPos);
+                            if (view instanceof TextView) {
+                                textView = (TextView) view; //Found
+                                break;
+                            }
                         }
+                        if (textView != null) {
+                            askForEdit(textView.getText().toString(), true);
+                        }
+                        notifyDataSetChanged();
                     }
-                    askForDelete(textView.getText().toString());
-                    return true; // Do not also have onclick run
-                }
-            });
+                });
 
+                imageEdit.setLongClickable(true);
+                imageEdit.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        // Find the textView which contains the string to query db with
+                        TextView textView = null;
+                        ViewGroup row = (ViewGroup) v.getParent();
+                        for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
+                            View view = row.getChildAt(itemPos);
+                            if (view instanceof TextView) {
+                                textView = (TextView) view; //Found
+                                break;
+                            }
+                        }
+                        if (textView != null) {
+                            askForDelete(textView.getText().toString());
+                        }
+                        return true; // Do not also have onclick run
+                    }
+                });
+            }
             return view;
         }
     }
@@ -189,9 +219,15 @@ public class WorkoutList extends AppCompatActivity {
     }
 
     // an alert dialog which asks the user if they want to edit the workout they selected
-    private void askForEdit(final String workoutName){
+    private void askForEdit(final String workoutName, final boolean editable){
         AlertDialog alertDialog = new AlertDialog.Builder(WorkoutList.this).create();
-        alertDialog.setMessage(getString(R.string.message_edit_workout));
+        // message is based on whether the user can edit or view the workout
+        if (checkIfBuiltIn(workoutName)){
+            alertDialog.setMessage(getString(R.string.message_view_workout));
+        } else {
+            alertDialog.setMessage(getString(R.string.message_edit_workout));
+        }
+
 
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
                 new DialogInterface.OnClickListener() {
@@ -199,6 +235,7 @@ public class WorkoutList extends AppCompatActivity {
                         dialog.dismiss();
                         Intent intent = new Intent(getApplicationContext(), EditWorkout.class);
                         intent.putExtra("workoutName", workoutName);
+                        intent.putExtra("editable", editable);
                         startActivity(intent);
                     }
                 });
@@ -306,6 +343,19 @@ public class WorkoutList extends AppCompatActivity {
             }
         }
         return true;
+    }
+
+    // Check if the workout is a built in workout.
+    // Return true if it is, and false if it isn't
+    private boolean checkIfBuiltIn(String name)
+    {
+        String[] builtInWorkouts = getResources().getStringArray(R.array.workout_titles);
+        for (int i = 0; i < builtInWorkouts.length; i++){
+            if (name.equals(builtInWorkouts[i])){
+                return true;
+            }
+        }
+        return false;
     }
 
     // gives alert dialog with help string

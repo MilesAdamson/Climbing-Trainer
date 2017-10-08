@@ -51,22 +51,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(database);
     }
 
-    // Inserts a workout_editable_item into the workouts table
+    // Inserts a workout_editable_item into the workouts table, if a table
+    // by that name doesn't already exist. If it does exist already, return false.
     public boolean insertWorkout(String name) {
-        String nameNoSpace = removeSpaces(name);
+        String tableNoSpaces = removeSpaces(name);
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues myCV = new ContentValues();
+        Cursor cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table' AND name='"
+                + tableNoSpaces + "';)", null);
 
-        myCV.put(T1_C1, nameNoSpace);
+        if(cursor.getCount() == 0) {
+            ContentValues myCV = new ContentValues();
 
-        long result = db.insert(T1, null, myCV);
+            myCV.put(T1_C1, tableNoSpaces);
 
-        if (result == -1) {
-            return false;
+            long result = db.insert(T1, null, myCV);
+
+            if (result == -1) {
+                return false;
+            } else {
+                db.execSQL("CREATE TABLE IF NOT EXISTS "
+                        + tableNoSpaces + " (" + T2_C1 + TEXT + ", " + T2_C2 + TEXT + END);
+                return true;
+            }
         } else {
-            db.execSQL("CREATE TABLE IF NOT EXISTS "
-                    + nameNoSpace + " (" + T2_C1 + TEXT + ", " + T2_C2 + TEXT + END);
-            return true;
+            return false;
         }
     }
 
@@ -94,7 +102,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + rowNameNoSpaces);
     }
 
-    // Adds a list of entriesList into a workout routine
+    // Adds a list of entriesList into a workout routine, if it exists. If it doesn't,
+    // return false.
     public void fillWorkout(String table, String[] names, String[] durations){
         String tableNoSpaces = removeSpaces(table);
         SQLiteDatabase db = this.getWritableDatabase();
