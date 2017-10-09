@@ -40,9 +40,9 @@ public class Workout extends AppCompatActivity {
     ArrayList<String> activities;
     ArrayList<String> durations;
     ArrayList<String> readables;
-    TextView textTimer;
-    ListView workoutList;
-    CountDownTimer currentTimer;
+    TextView textViewTimer;
+    ListView listView;
+    CountDownTimer countDownTimer;
     ProgressBar progressBar;
     DatabaseHelper databaseHelper;
 
@@ -51,8 +51,8 @@ public class Workout extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
-        textTimer = (TextView)findViewById(R.id.textViewTimer);
-        textTimer.setText(START_TIME);
+        textViewTimer = (TextView)findViewById(R.id.textViewTimer);
+        textViewTimer.setText(START_TIME);
         progressBar = (ProgressBar)findViewById(R.id.progressBarPercent);
         progressBar.setMax(PB_MAX);
         progressBar.setProgress(0);
@@ -68,9 +68,9 @@ public class Workout extends AppCompatActivity {
             totalWorkoutTime += Integer.parseInt(durations.get(i));
         }
 
-        currentTimer = null;
+        countDownTimer = null;
 
-        // Add blank list items so scrolling near the top works
+        // Add blank list items so scrolling near the top works smoothly
         readables.add(0, getString(R.string.message_initial));
         readables.add(0, "");
         readables.add(0, "");
@@ -84,23 +84,20 @@ public class Workout extends AppCompatActivity {
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
 
-        workoutList = (ListView)findViewById(R.id.workoutList);
+        listView = (ListView)findViewById(R.id.listViewWorkout);
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this,
                 R.layout.workout_list_item,
-                R.id.textItem,
+                R.id.textViewItem,
                 readables);
 
-        workoutList.setAdapter(arrayAdapter);
-        workoutList.setSelection(4);
-        workoutList.setClickable(false);
-        workoutList.setDivider(null);
-        workoutList.setOnTouchListener(new View.OnTouchListener() {
+        listView.setAdapter(arrayAdapter);
+        listView.setSelection(4);
+        listView.setClickable(false);
+        listView.setDivider(null);
+        listView.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    return true; // Indicates that this has been handled
-                }
-                return false;
+                return event.getAction() == MotionEvent.ACTION_MOVE;
             }
         });
     }
@@ -108,11 +105,10 @@ public class Workout extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        if (currentTimer != null) {
-            currentTimer.cancel();
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -131,6 +127,8 @@ public class Workout extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Begins the countdown timer and steps through the workout activities
+    // and their corresponding durations
     public void startWorkout(MenuItem item){
         // Tapping the timer button while running resets workout
         if(started){
@@ -142,20 +140,18 @@ public class Workout extends AppCompatActivity {
         zeroPB();
 
         // Start the total timer and workout timers after the initial countdown is done
-        currentTimer = new CountDownTimer(countdown, 25) {
+        countDownTimer = new CountDownTimer(countdown, 25) {
 
             public void onTick(long millisUntilFinished) {
                 updatePB(countdown, countdown - (int)millisUntilFinished);
                 String timeStamp = String.format ("%.1f", (double)millisUntilFinished / 1000);
-                textTimer.setText(timeStamp);
-                //beep(millisUntilFinished, false);
+                textViewTimer.setText(timeStamp);
             }
 
             // Start workout once initial countdown is done
             public void onFinish() {
                 String timeStamp = String.format ("%.1f", (double)5000 / 1000);
-                textTimer.setText(timeStamp);
-               // beep(0, true);
+                textViewTimer.setText(timeStamp);
                 displayWorkoutActivity();
             }
         }.start();
@@ -181,20 +177,16 @@ public class Workout extends AppCompatActivity {
 
     private void displayWorkoutActivity() {
         // Loop through the activities and their durations
-        workoutList.smoothScrollToPosition(currentIndex + 6);
+        listView.smoothScrollToPosition(currentIndex + 6);
         final int len = (Integer.parseInt(durations.get(currentIndex)) * 1000);
 
-        currentTimer = new CountDownTimer(len, 25) {
+        countDownTimer = new CountDownTimer(len, 25) {
 
             public void onTick(long millisUntilFinished) {
                 updatePB(len, len - (int)millisUntilFinished);
                 totalTime += 25.0 / 1000;
                 String timeStamp = String.format ("%.1f", (double)millisUntilFinished / 1000);
-                textTimer.setText(timeStamp);
-                // Do not beep for very short activities
-                if (len >= 3000) {
-                    //beep(millisUntilFinished, false);
-                }
+                textViewTimer.setText(timeStamp);
             }
 
             public void onFinish() {
@@ -231,41 +223,11 @@ public class Workout extends AppCompatActivity {
     private void resetWorkout(){
         started = false;
         currentIndex = 0;
-        workoutList.setSelection(4);
-        currentTimer.cancel();
-        currentTimer = null;
-        textTimer.setText(START_TIME);
+        listView.setSelection(4);
+        countDownTimer.cancel();
+        countDownTimer = null;
+        textViewTimer.setText(START_TIME);
         zeroPB();
-    }
-
-    // Gives a three beep countdown to the finish of a workout activity, and a final beep
-    private void beep(long millisUntilFinished, boolean lastBeep){
-        AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
-        currentVolume = (int)((double)currentVolume * 100.0 / 15.0);
-        if (!lastBeep) {
-            if (millisUntilFinished <= 3000 && beepCount == 3) {
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, currentVolume);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ONE_MIN_BEEP, 100);
-                beepCount--;
-            }
-
-            if (millisUntilFinished <= 2000 && beepCount == 2) {
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, currentVolume);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ONE_MIN_BEEP, 100);
-                beepCount--;
-            }
-
-            if (millisUntilFinished <= 1000 && beepCount == 1) {
-                ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, currentVolume);
-                toneG.startTone(ToneGenerator.TONE_CDMA_ONE_MIN_BEEP, 100);
-                beepCount--;
-            }
-        } else {
-            beepCount = 3;
-            ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, currentVolume);
-            toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 100);
-        }
     }
 
     // Saves an entry to the logbook table with the current date in a string

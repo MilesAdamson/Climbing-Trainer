@@ -2,10 +2,6 @@ package com.nointelligence.miles.climbharder_hangboard;
 
 import android.content.Context;
 
-/**
- * Created by miles on 2017-10-07.
- */
-
 public class BuiltInWorkouts {
 
     Context context;
@@ -104,6 +100,9 @@ public class BuiltInWorkouts {
                     "7", "3", "7", "3", "7", "3", "7", "3", "7", "3", "7", "120",
                     "7", "3", "7", "3", "7", "3", "7", "3", "7"}
     );
+
+
+
 
     // Contains all the information DatabaseHelper expects when creating a new workout
     class WorkoutTable{

@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -63,7 +62,7 @@ public class EditWorkout extends AppCompatActivity {
         adView.loadAd(adRequest);
 
         databaseHelper = new DatabaseHelper(this);
-        listView = (ListView) findViewById(R.id.listRoutine);
+        listView = (ListView) findViewById(R.id.listViewRoutine);
         populateListViewFromDB();
     }
 
@@ -116,11 +115,11 @@ public class EditWorkout extends AppCompatActivity {
                 view = inflater.inflate(R.layout.workout_editable_item, null);
             }
 
-            TextView listItemText = (TextView) view.findViewById(R.id.list_item_string);
+            TextView listItemText = (TextView) view.findViewById(R.id.textViewItemString);
             String itemName = list.get(position);
             listItemText.setText(itemName);
 
-            final ImageView imageEdit = (ImageView) view.findViewById(R.id.image_edit);
+            final ImageView imageEdit = (ImageView) view.findViewById(R.id.imageViewEdit);
 
             // if this is a built in workout, do not show the edit button
             // users cannot change built in workouts
@@ -225,7 +224,7 @@ public class EditWorkout extends AppCompatActivity {
 
         public Alerts(int p){
             position = p;
-        };
+        }
 
         private void setHold(String s){hold = s;}
         private void setType(String s){type = s;}

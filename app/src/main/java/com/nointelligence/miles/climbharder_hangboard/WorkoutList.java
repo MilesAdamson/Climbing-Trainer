@@ -44,7 +44,7 @@ public class WorkoutList extends AppCompatActivity {
         adView.loadAd(adRequest);
 
         databaseHelper = new DatabaseHelper(this);
-        listView = (ListView) findViewById(R.id.listWorkouts);
+        listView = (ListView) findViewById(R.id.listViewAllWorkouts);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long arg3) {
@@ -113,13 +113,13 @@ public class WorkoutList extends AppCompatActivity {
                 view = inflater.inflate(R.layout.workout_editable_item, null);
             }
 
-            TextView listItemText = (TextView) view.findViewById(R.id.list_item_string);
+            TextView listItemText = (TextView) view.findViewById(R.id.textViewItemString);
             String itemName = list.get(position);
             listItemText.setText(itemName);
 
             // If it is built in, user can view the workout but not edit it or delete it
             if (checkIfBuiltIn(itemName)){
-                final ImageView imageEdit = (ImageView) view.findViewById(R.id.image_edit);
+                final ImageView imageEdit = (ImageView) view.findViewById(R.id.imageViewEdit);
                 imageEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -132,8 +132,10 @@ public class WorkoutList extends AppCompatActivity {
                                 break;
                             }
                         }
-                        askForEdit(textView.getText().toString(), false);
-                        notifyDataSetChanged();
+                        if (textView != null) {
+                            askForEdit(textView.getText().toString(), false);
+                            notifyDataSetChanged();
+                        }
                     }
                 });
 
@@ -141,7 +143,7 @@ public class WorkoutList extends AppCompatActivity {
 
                 // if it's not built in, they can delete the workout with long click
             } else {
-                final ImageView imageEdit = (ImageView) view.findViewById(R.id.image_edit);
+                final ImageView imageEdit = (ImageView) view.findViewById(R.id.imageViewEdit);
                 imageEdit.setLongClickable(false);
                 imageEdit.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <ListView
-            android:id="@+id/listWorkouts"
+            android:id="@+id/listViewAllWorkouts"
             android:longClickable="true"
             android:layout_width="match_parent"
             android:layout_height="0dp"

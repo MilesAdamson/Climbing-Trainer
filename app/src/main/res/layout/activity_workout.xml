@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/workout_layout"
+            android:id="@+id/layoutWorkout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -25,10 +25,10 @@
                 android:background="@drawable/blue_gradient"
                 android:gravity="center"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="70dp" />
+                android:textSize="70sp" />
 
             <ListView
-                android:id="@+id/workoutList"
+                android:id="@+id/listViewWorkout"
                 android:layout_width="match_parent"
                 android:layout_height="300dp" />
 
@@ -40,8 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingBottom="50dp"
-            android:layout_below="@+id/workout_layout" />
+            android:paddingBottom="50dp"/>
 
     </LinearLayout>
 
