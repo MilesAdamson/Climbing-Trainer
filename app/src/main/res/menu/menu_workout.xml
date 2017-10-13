@@ -4,27 +4,38 @@
     tools:context="com.nointelligence.miles.climbharder_hangboard.Workout">
 
     <item
-        android:id="@+id/to_home"
-        android:orderInCategory="2"
-        android:title="@string/action_start"
-        android:icon="@mipmap/ic_home"
+        android:id="@+id/action_save"
+        android:orderInCategory="1"
+        android:title="@string/action_save"
+        android:icon="@mipmap/ic_save"
         app:showAsAction="always"
-        android:onClick="home"/>
+        android:onClick="save"/>
 
     <item
         android:id="@+id/action_start"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         android:title="@string/action_start"
         android:icon="@mipmap/ic_start"
         app:showAsAction="always"
         android:onClick="startWorkout"/>
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/to_home"
         android:orderInCategory="3"
+        android:title="@string/action_start"
+        android:icon="@mipmap/ic_home"
+        app:showAsAction="always"
+        android:onClick="home"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="4"
         android:title="@string/action_settings"
         android:icon="@mipmap/ic_help"
         app:showAsAction="always"
         android:onClick="help"/>
+
+
+
 
 </menu>

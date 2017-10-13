@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -117,19 +119,34 @@ public class WorkoutList extends AppCompatActivity {
             String itemName = list.get(position);
             listItemText.setText(itemName);
 
+            // Calculate the workouts total time from its durations and display that
+            TextView listItemDuration = (TextView) view.findViewById(R.id.textViewDuration);
+            ArrayList<String> durations = databaseHelper.selectRoutine(itemName)[DatabaseHelper.DURATIONS];
+            int totalTime = 0;
+            for (int i = 0; i < durations.size(); i++){
+                totalTime += Integer.parseInt(durations.get(i));
+            }
+            int s = totalTime % 60;
+            totalTime /= 60;
+            listItemDuration.setText(totalTime + " min, " + s + "s");
+
             // If it is built in, user can view the workout but not edit it or delete it
+            // also change image to an eye, instead of edit pencil
             if (checkIfBuiltIn(itemName)){
                 final ImageView imageEdit = (ImageView) view.findViewById(R.id.imageViewEdit);
+                imageEdit.setImageResource(R.drawable.ic_view);
                 imageEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
+                    // find the TextView containing the workout name and call askForEdit
                     public void onClick(View v) {
                         TextView textView = null;
+                        LinearLayout linearLayout = null;
                         ViewGroup row = (ViewGroup) v.getParent();
                         for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
                             View view = row.getChildAt(itemPos);
-                            if (view instanceof TextView) {
-                                textView = (TextView) view; //Found
-                                break;
+                            if (view instanceof LinearLayout) {
+                                linearLayout = (LinearLayout) view;
+                                textView = (TextView) linearLayout.getChildAt(0);
                             }
                         }
                         if (textView != null) {
@@ -141,41 +158,42 @@ public class WorkoutList extends AppCompatActivity {
 
                 imageEdit.setLongClickable(false);
 
-                // if it's not built in, they can delete the workout with long click
             } else {
                 final ImageView imageEdit = (ImageView) view.findViewById(R.id.imageViewEdit);
-                imageEdit.setLongClickable(false);
+                // find TextView with workout name and call askForEdit, but with editable flag true
                 imageEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         TextView textView = null;
+                        LinearLayout linearLayout = null;
                         ViewGroup row = (ViewGroup) v.getParent();
                         for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
                             View view = row.getChildAt(itemPos);
-                            if (view instanceof TextView) {
-                                textView = (TextView) view; //Found
-                                break;
+                            if (view instanceof LinearLayout) {
+                                linearLayout = (LinearLayout) view;
+                                textView = (TextView) linearLayout.getChildAt(0);
                             }
                         }
                         if (textView != null) {
                             askForEdit(textView.getText().toString(), true);
+                            notifyDataSetChanged();
                         }
-                        notifyDataSetChanged();
                     }
                 });
 
+                // if it's not built in, they can delete the workout with long click
                 imageEdit.setLongClickable(true);
                 imageEdit.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        // Find the textView which contains the string to query db with
+                        LinearLayout linearLayout = null;
                         TextView textView = null;
                         ViewGroup row = (ViewGroup) v.getParent();
                         for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
                             View view = row.getChildAt(itemPos);
-                            if (view instanceof TextView) {
-                                textView = (TextView) view; //Found
-                                break;
+                            if (view instanceof LinearLayout) {
+                                linearLayout = (LinearLayout) view;
+                                textView = (TextView) linearLayout.getChildAt(0);
                             }
                         }
                         if (textView != null) {
@@ -193,7 +211,6 @@ public class WorkoutList extends AppCompatActivity {
     private void askToStart(){
         AlertDialog alertDialog = new AlertDialog.Builder(WorkoutList.this).create();
         alertDialog.setMessage(getString(R.string.message_start_question));
-
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

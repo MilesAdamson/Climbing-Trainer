@@ -260,4 +260,26 @@ public class Workout extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
+
+    // called by the menu bar, assks to save workout to logbook
+    public void save(MenuItem item){
+        AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
+        alertDialog.setMessage(getString(R.string.message_save));
+
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        saveWorkout();
+                        dialog.dismiss();
+                    }
+                });
+
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.option_no),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
 }

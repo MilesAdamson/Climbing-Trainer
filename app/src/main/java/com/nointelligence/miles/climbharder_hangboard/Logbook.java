@@ -41,6 +41,9 @@ public class Logbook extends AppCompatActivity {
         logbook = (ListView)findViewById(R.id.listLogbook);
         refreshList();
 
+        // OnClick, a user can either delete the logbook entry or
+        // view the corresponding workout, if the workout still exists.
+        // Opens the workout in editable mode if the workout is user created
         logbook.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long arg3) {
@@ -59,6 +62,9 @@ public class Logbook extends AppCompatActivity {
                                 } else {
                                     Intent intent = new Intent(getApplicationContext(), EditWorkout.class);
                                     intent.putExtra("workoutName", workoutName);
+                                    if (checkIfBuiltIn(workoutName)){
+                                        intent.putExtra("editable", false);
+                                    }
                                     startActivity(intent);
                                 }
                                 dialog.dismiss();
@@ -73,7 +79,6 @@ public class Logbook extends AppCompatActivity {
                                 refreshList();
                             }
                         });
-
                 alertDialog.show();
             }
         });
@@ -96,6 +101,7 @@ public class Logbook extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // Uses database helper to get the entires for the listView
     private void refreshList(){
         entriesList = databaseHelper.selectLogbook()[0];
         keysList = databaseHelper.selectLogbook()[1];
@@ -131,5 +137,18 @@ public class Logbook extends AppCompatActivity {
     public void home(MenuItem item){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    // Check if the workout is a built in workout.
+    // Return true if it is, and false if it isn't
+    private boolean checkIfBuiltIn(String name)
+    {
+        String[] builtInWorkouts = getResources().getStringArray(R.array.workout_titles);
+        for (int i = 0; i < builtInWorkouts.length; i++){
+            if (name.equals(builtInWorkouts[i])){
+                return true;
+            }
+        }
+        return false;
     }
 }

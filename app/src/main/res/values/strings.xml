@@ -4,6 +4,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_add_workout">Add Blank Workout</string>
     <string name="action_start">Start Workout</string>
+    <string name="action_save">Save to Logbook</string>
 
     <string name="label_workouts">Workouts</string>
     <string name="label_logbook">Logbook</string>
@@ -67,6 +68,9 @@
         <item>14mm</item>
         <item>18mm</item>
         <item>20mm</item>
+        <item>22mm</item>
+        <item>24mm</item>
+        <item>26mm</item>
     </string-array>
 
     <string-array name="array_sizes">
@@ -92,6 +96,9 @@
         For more information, see https://support.google.com/admob/answer/3052638
     <!- -->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
+    <string name="facebook_app_id">490322287997985</string>
+    <string name="fb_login_protocol_scheme">fb490322287997985</string>
 
 
 </resources>

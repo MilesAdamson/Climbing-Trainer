@@ -233,14 +233,12 @@ public class EditWorkout extends AppCompatActivity {
 
         public String workoutActivity;
 
-        private void buildWorkoutActivity(){
-            switch (type){
-                case "Rest":
-                    workoutActivity = type;
-                    break;
-                case "Hang":
-                    workoutActivity = size + " " + hold;
-                    break;
+        // builds the workout string based on whether the type is a rest or a hang
+        private void buildWorkoutActivity() {
+            if (type == getResources().getString(R.string.type_rest)){
+                workoutActivity = type;
+            } else {
+                workoutActivity = size + " " + hold;
             }
         }
 
