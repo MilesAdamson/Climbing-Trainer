@@ -2,10 +2,8 @@ package com.nointelligence.miles.climbharder_hangboard;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
 
         // inserts the built in workouts if they don't already exist
         new BuiltInWorkouts(this).addDefaultWorkouts();
-
     }
 
     @Override
@@ -35,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
         adView.loadAd(adRequest);
-
     }
 
     @Override
@@ -47,28 +43,32 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    // Checks for internet and continues if user has connection.
+    // if there is no connection, ask them to enable wifi
     public void changeActivity(View v){
-        Intent selectedActivity = new Intent(this, MainActivity.class);
+        ConnectionCheck connectionCheck = new ConnectionCheck(this);
+        Intent intent;
+            switch (v.getId()) {
+                case R.id.layoutWorkouts:
+                    intent = new Intent(this, WorkoutList.class);
+                    connectionCheck.navigate(intent);
+                    break;
 
-        switch (v.getId()){
-            case R.id.layoutWorkouts:
-                selectedActivity = new Intent(this, WorkoutList.class);
-                break;
+                case R.id.layoutLogbook:
+                    intent = new Intent(this, Logbook.class);
+                    connectionCheck.navigate(intent);
+                    break;
 
-            case R.id.layoutLogbook:
-                selectedActivity = new Intent(this, Logbook.class);
-                break;
-
-        }
-        startActivity(selectedActivity);
+                default:
+                    // do nothing
+                    break;
+            }
     }
 
 }

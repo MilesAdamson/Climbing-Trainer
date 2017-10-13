@@ -51,6 +51,7 @@
     <string name="error_exist">This workout no longer exists.</string>
     <string name="error_duration">Duration cannot be zero, or more than 999.</string>
     <string name="error_cant_edit">You may not edit the built in workouts.</string>
+    <string name="error_internet">This app requires internet access. Enable WiFi? (Alternatively, enable mobile data manually)</string>
 
     <string-array name="workout_titles">
         <item>One Arm Hangs by Andrew Funk</item>

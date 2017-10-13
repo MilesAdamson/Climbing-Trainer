@@ -47,13 +47,13 @@
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
         <ImageView
             android:id="@+id/imageViewEdit"
-            android:layout_width="50dp"
-            android:layout_height="75dp"
+            android:layout_width="35dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
             android:layout_marginEnd="20dp"
             android:layout_marginRight="20dp"
             android:contentDescription="@null"
