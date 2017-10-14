@@ -1,22 +1,30 @@
 package com.nointelligence.miles.climbharder_hangboard;
 
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -130,9 +138,26 @@ public class Workout extends AppCompatActivity {
     // Begins the countdown timer and steps through the workout activities
     // and their corresponding durations
     public void startWorkout(MenuItem item){
-        // Tapping the timer button while running resets workout
+        // Tapping the timer button while running asks to reset workout
         if(started){
-            resetWorkout();
+            AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
+            alertDialog.setMessage(getString(R.string.message_reset));
+
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            resetWorkout();
+                            dialog.dismiss();
+                        }
+                    });
+
+            alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.option_cancel),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
             return;
         }
         started = true;
@@ -261,12 +286,20 @@ public class Workout extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // called by the menu bar, assks to save workout to logbook
+    // called by the menu bar, asks to save workout to logbook.
+    // also has facebook share button with link to app page on google store
+    // TODO change link to google play store page
     public void save(MenuItem item){
+        ShareButton fbShareButton = new ShareButton(Workout.this);
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse("https://developers.facebook.com"))
+                .build();
+        fbShareButton.setShareContent(content);
+
         AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
         alertDialog.setMessage(getString(R.string.message_save));
 
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_save),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         saveWorkout();
@@ -274,12 +307,14 @@ public class Workout extends AppCompatActivity {
                     }
                 });
 
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.option_no),
+        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.option_cancel),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
+        alertDialog.setView(fbShareButton);
         alertDialog.show();
     }
+
 }
