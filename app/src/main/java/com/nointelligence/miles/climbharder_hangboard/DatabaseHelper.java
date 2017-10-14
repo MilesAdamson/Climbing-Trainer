@@ -34,6 +34,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int DURATIONS = 1;
     public static final int READABLES = 2;
 
+    // Indexes for array returned by selectLogbook
+    public static final int ENTRIES = 0;
+    public static final int KEYS = 1;
+    public static final int NAMES = 2;
+
     public DatabaseHelper(Context context) {
         super (context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -71,9 +76,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             } else {
                 db.execSQL("CREATE TABLE IF NOT EXISTS "
                         + tableNoSpaces + " (" + T2_C1 + TEXT + ", " + T2_C2 + TEXT + END);
+                cursor.close();
                 return true;
             }
         } else {
+            cursor.close();
             return false;
         }
     }
@@ -207,7 +214,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 keys.add(cursor.getString(0));
                 names.add(replaceUnderscores(cursor.getString(1)));
-                tableEntires.add(cursor.getString(2) + ":\n " +replaceUnderscores(cursor.getString(1)));
+                tableEntires.add(cursor.getString(2) + ":\n " + replaceUnderscores(cursor.getString(1)));
             }
             while (cursor.moveToNext());
         }

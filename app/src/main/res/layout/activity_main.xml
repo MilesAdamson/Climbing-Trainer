@@ -26,7 +26,7 @@
         android:src="@drawable/background_image1">
 
         <LinearLayout
-            android:id="@+id/layoutWorkouts"
+            android:id="@+id/layoutWorkoutMainActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -38,6 +38,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/imageViewBicep"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -46,6 +47,7 @@
                 ads:srcCompat="@drawable/workout" />
 
             <TextView
+                android:id="@+id/textViewWorkouts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"
@@ -68,6 +70,7 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/imageViewLogbook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -76,6 +79,7 @@
                 ads:srcCompat="@drawable/logbook" />
 
             <TextView
+                android:id="@+id/textViewLogbook"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|end"

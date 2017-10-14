@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         ConnectionCheck connectionCheck = new ConnectionCheck(this);
         Intent intent;
             switch (v.getId()) {
-                case R.id.layoutWorkouts:
+                case R.id.layoutWorkoutMainActivity:
                     intent = new Intent(this, WorkoutList.class);
                     connectionCheck.navigate(intent);
                     break;

@@ -1,6 +1,5 @@
 package com.nointelligence.miles.climbharder_hangboard;
 
-import android.provider.ContactsContract;
 import android.support.test.rule.ActivityTestRule;
 
 import org.junit.After;
@@ -8,8 +7,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;

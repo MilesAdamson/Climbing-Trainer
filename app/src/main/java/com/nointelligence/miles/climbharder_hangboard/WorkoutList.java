@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -344,7 +343,7 @@ public class WorkoutList extends AppCompatActivity {
     }
 
     // Ensure alphanumeric table namesList
-    private boolean verifyInput(String input){
+    public boolean verifyInput(String input){
         char[] accepted = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -366,7 +365,7 @@ public class WorkoutList extends AppCompatActivity {
 
     // Check if the workout is a built in workout.
     // Return true if it is, and false if it isn't
-    private boolean checkIfBuiltIn(String name)
+    public boolean checkIfBuiltIn(String name)
     {
         String[] builtInWorkouts = getResources().getStringArray(R.array.workout_titles);
         for (int i = 0; i < builtInWorkouts.length; i++){
