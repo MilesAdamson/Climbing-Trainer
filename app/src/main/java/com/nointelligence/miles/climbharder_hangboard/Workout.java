@@ -30,7 +30,9 @@ public class Workout extends AppCompatActivity {
     static final String START_TIME = "5:00";
     static final int PB_MAX = 1000; // number of progress bar ticks
     static final int TICK_SIZE_MS = 25; // onTick seperation in milliseconds
-    static final int INDEX_START = 4; // start index isn't zero since list is padded at the top
+    static final int INDEX_START_OFFSET_LISTVIEW = 4; // start index isn't zero since list is padded at the top
+    static final int INDEX_OFFSET_FIRST_ITEM_LISTVIEW = 6; // index of first workout item
+    static final int INITIAL_COUNTDOWN_MS = 5000; // 5 second initial countdown is fixed
 
     boolean started = false;
     boolean paused = false;
@@ -95,7 +97,7 @@ public class Workout extends AppCompatActivity {
                 readables);
 
         listView.setAdapter(arrayAdapter);
-        listView.setSelection(INDEX_START);
+        listView.setSelection(INDEX_START_OFFSET_LISTVIEW);
         listView.setClickable(false);
         listView.setDivider(null);
         listView.setOnTouchListener(new View.OnTouchListener() {
@@ -178,14 +180,13 @@ public class Workout extends AppCompatActivity {
         if (!paused) {
             started = true;
             inCountdown = true;
-            final int countdown = 5000; // Initial countdown length
             zeroPB();
 
             // Start the total timer and workout timers after the initial countdown is done
-            countDownTimer = new CountDownTimer(countdown, TICK_SIZE_MS) {
+            countDownTimer = new CountDownTimer(INITIAL_COUNTDOWN_MS, TICK_SIZE_MS) {
 
                 public void onTick(long millisUntilFinished) {
-                    updatePB(countdown, countdown - (int) millisUntilFinished);
+                    updatePB(INITIAL_COUNTDOWN_MS, INITIAL_COUNTDOWN_MS - (int) millisUntilFinished);
                     String timeStamp = String.format("%.1f", (double) millisUntilFinished / 1000);
                     textViewTimer.setText(timeStamp);
                 }
@@ -226,7 +227,7 @@ public class Workout extends AppCompatActivity {
     // Loop through the activities and their durations, update displays.
     private void displayWorkoutActivity() {
 
-        listView.smoothScrollToPosition(currentIndex + 6);
+        listView.smoothScrollToPosition(currentIndex + INDEX_OFFSET_FIRST_ITEM_LISTVIEW);
         int length;
 
         // if paused, resume with the ms left saved previously when it was paused
@@ -277,7 +278,7 @@ public class Workout extends AppCompatActivity {
     private void resetWorkout(){
         started = false;
         currentIndex = 0;
-        listView.setSelection(INDEX_START);
+        listView.setSelection(INDEX_START_OFFSET_LISTVIEW);
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
