@@ -15,7 +15,7 @@
     <string name="message_start">Start</string>
     <string name="message_initial">Initial Countdown</string>
     <string name="message_finished">Last one!</string>
-    <string name="message_save">Save to logbook?</string>
+    <string name="message_save">Save to logbook, or share to Facebook</string>
     <string name="message_start_question">Start this workout?</string>
     <string name="message_edit_workout">Edit this workout?"</string>
     <string name="message_view_workout">View this workout?"</string>
@@ -26,21 +26,26 @@
     <string name="message_enter_duration">Enter the duration in seconds.</string>
     <string name="message_select_type">Add rest or hang?</string>
     <string name="message_select_size">Select hold size.</string>
+    <string name="message_reset">Timer options:</string>
 
     <string name="option_view">View Workout</string>
     <string name="option_delete">Delete</string>
     <string name="option_ok">OK</string>
     <string name="option_no">No</string>
+    <string name="option_cancel">Cancel</string>
+    <string name="option_save">Save to logbook</string>
     <string name="option_insert">Insert below</string>
     <string name="option_replace">Replace</string>
     <string name="option_add">Add</string>
+    <string name="option_pause">Pause</string>
+    <string name="option_reset">Reset</string>
 
     <string name="title_activity_logbook">Logbook</string>
     <string name="title_activity_edit_workout">Edit</string>
     <string name="title_activity_workout">Workout</string>
     <string name="title_activity_workouts">Workouts</string>
 
-    <string name="help_workout">Tap the stopwatch to begin. Tap it again to reset the workout.</string>
+    <string name="help_workout">Tap the stopwatch to begin. Tap it again to reset the workout or pause.</string>
     <string name="help_workout_list">"Tap the name of a workout to begin it. To create a workout, tap the plus button. To edit one, tap the pencil. To delete a workout, tap and hold the pencil. You cannot delete or edit built in workouts."</string>
     <string name="help_logbook">Tap an entry to view the workout, or delete the entry.</string>
     <string name="help_edit">"Tap the pencil to choose an option for a workout activity. Tap the plus to add a new activity to the bottom. Editing is saved as you go."</string>

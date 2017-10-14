@@ -377,7 +377,7 @@ public class EditWorkout extends AppCompatActivity {
             final ArrayAdapter<String> adp = new ArrayAdapter<>(EditWorkout.this,
                     android.R.layout.simple_spinner_item, dropdown);
             final Spinner sp = new Spinner(EditWorkout.this);
-            sp.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT));
+            sp.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             sp.setAdapter(adp);
             AlertDialog.Builder builder = new AlertDialog.Builder(EditWorkout.this);
             builder.setMessage(getString(R.string.message_select_size));

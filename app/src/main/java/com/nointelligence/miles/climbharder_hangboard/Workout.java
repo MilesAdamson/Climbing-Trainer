@@ -1,30 +1,22 @@
 package com.nointelligence.miles.climbharder_hangboard;
 
-import com.facebook.FacebookSdk;
 import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareButton;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,13 +29,16 @@ public class Workout extends AppCompatActivity {
 
     static final String START_TIME = "5:00";
     static final int PB_MAX = 1000; // number of progress bar ticks
+    static final int TICK_SIZE_MS = 25; // onTick seperation in milliseconds
+    static final int INDEX_START = 4; // start index isn't zero since list is padded at the top
 
     boolean started = false;
-    double totalTime = 0;
+    boolean paused = false;
+    boolean inCountdown = false;
     int currentIndex = 0;
     int totalWorkoutTime = 0;
     int workoutLength;
-    int beepCount = 3;
+    long msRemainingOnPause = 0;
     String workoutName;
     ArrayList<String> activities;
     ArrayList<String> durations;
@@ -100,7 +95,7 @@ public class Workout extends AppCompatActivity {
                 readables);
 
         listView.setAdapter(arrayAdapter);
-        listView.setSelection(4);
+        listView.setSelection(INDEX_START);
         listView.setClickable(false);
         listView.setDivider(null);
         listView.setOnTouchListener(new View.OnTouchListener() {
@@ -137,13 +132,22 @@ public class Workout extends AppCompatActivity {
 
     // Begins the countdown timer and steps through the workout activities
     // and their corresponding durations
-    public void startWorkout(MenuItem item){
-        // Tapping the timer button while running asks to reset workout
-        if(started){
+    public void startWorkout(MenuItem item) {
+
+        // if they tap the watch again and are still in the initial countdown,
+        // reset workout instead of asking for pause/reset
+        if (inCountdown){
+            inCountdown = false;
+            resetWorkout();
+            return;
+        }
+
+        // Tapping the timer button while running asks to reset or pause workout
+        if (started && !paused) {
             AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
             alertDialog.setMessage(getString(R.string.message_reset));
 
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_reset),
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             resetWorkout();
@@ -157,29 +161,48 @@ public class Workout extends AppCompatActivity {
                             dialog.dismiss();
                         }
                     });
+
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, getString(R.string.option_pause),
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            pauseWorkout();
+                            dialog.dismiss();
+                        }
+                    });
+
             alertDialog.show();
             return;
         }
-        started = true;
-        final int countdown = 5000; // Initial countdown length
-        zeroPB();
 
-        // Start the total timer and workout timers after the initial countdown is done
-        countDownTimer = new CountDownTimer(countdown, 25) {
+        // if not paused and hasn't started yet, do initial countdown
+        if (!paused) {
+            started = true;
+            inCountdown = true;
+            final int countdown = 5000; // Initial countdown length
+            zeroPB();
 
-            public void onTick(long millisUntilFinished) {
-                updatePB(countdown, countdown - (int)millisUntilFinished);
-                String timeStamp = String.format ("%.1f", (double)millisUntilFinished / 1000);
-                textViewTimer.setText(timeStamp);
-            }
+            // Start the total timer and workout timers after the initial countdown is done
+            countDownTimer = new CountDownTimer(countdown, TICK_SIZE_MS) {
 
-            // Start workout once initial countdown is done
-            public void onFinish() {
-                String timeStamp = String.format ("%.1f", (double)5000 / 1000);
-                textViewTimer.setText(timeStamp);
-                displayWorkoutActivity();
-            }
-        }.start();
+                public void onTick(long millisUntilFinished) {
+                    updatePB(countdown, countdown - (int) millisUntilFinished);
+                    String timeStamp = String.format("%.1f", (double) millisUntilFinished / 1000);
+                    textViewTimer.setText(timeStamp);
+                }
+
+                // Start workout once initial countdown is done
+                public void onFinish() {
+                    String timeStamp = String.format("%.1f", (double) 5000 / 1000);
+                    textViewTimer.setText(timeStamp);
+                    inCountdown = false;
+                    displayWorkoutActivity();
+                }
+            }.start();
+        } else {
+            // it was paused, resume workout
+            displayWorkoutActivity();
+            paused = false;
+        }
     }
 
     private void updatePB(final int max, final int current){
@@ -200,23 +223,29 @@ public class Workout extends AppCompatActivity {
         });
     }
 
+    // Loop through the activities and their durations, update displays.
     private void displayWorkoutActivity() {
-        // Loop through the activities and their durations
-        listView.smoothScrollToPosition(currentIndex + 6);
-        final int len = (Integer.parseInt(durations.get(currentIndex)) * 1000);
 
-        countDownTimer = new CountDownTimer(len, 25) {
+        listView.smoothScrollToPosition(currentIndex + 6);
+        int length;
+
+        // if paused, resume with the ms left saved previously when it was paused
+        if (!paused) {
+            length = (Integer.parseInt(durations.get(currentIndex)) * 1000);
+        } else {
+            length = (int)msRemainingOnPause;
+        }
+        final int len = length;
+        countDownTimer = new CountDownTimer(len, TICK_SIZE_MS) {
 
             public void onTick(long millisUntilFinished) {
+                msRemainingOnPause = millisUntilFinished;
                 updatePB(len, len - (int)millisUntilFinished);
-                totalTime += 25.0 / 1000;
                 String timeStamp = String.format ("%.1f", (double)millisUntilFinished / 1000);
                 textViewTimer.setText(timeStamp);
             }
 
             public void onFinish() {
-                //beep(0, true);
-                totalTime += 25.0 / 1000;
                 currentIndex += 1;
                 if(currentIndex == workoutLength){
                     AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
@@ -248,8 +277,10 @@ public class Workout extends AppCompatActivity {
     private void resetWorkout(){
         started = false;
         currentIndex = 0;
-        listView.setSelection(4);
-        countDownTimer.cancel();
+        listView.setSelection(INDEX_START);
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
         countDownTimer = null;
         textViewTimer.setText(START_TIME);
         zeroPB();
@@ -317,4 +348,9 @@ public class Workout extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void pauseWorkout(){
+        countDownTimer.cancel();
+        progressBar.setProgress(0);
+        paused = true;
+    }
 }

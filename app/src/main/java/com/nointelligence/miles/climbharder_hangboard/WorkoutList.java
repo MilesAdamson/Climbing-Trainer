@@ -139,7 +139,7 @@ public class WorkoutList extends AppCompatActivity {
                     // find the TextView containing the workout name and call askForEdit
                     public void onClick(View v) {
                         TextView textView = null;
-                        LinearLayout linearLayout = null;
+                        LinearLayout linearLayout;
                         ViewGroup row = (ViewGroup) v.getParent();
                         for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
                             View view = row.getChildAt(itemPos);
@@ -164,7 +164,7 @@ public class WorkoutList extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         TextView textView = null;
-                        LinearLayout linearLayout = null;
+                        LinearLayout linearLayout;
                         ViewGroup row = (ViewGroup) v.getParent();
                         for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {
                             View view = row.getChildAt(itemPos);
@@ -185,7 +185,7 @@ public class WorkoutList extends AppCompatActivity {
                 imageEdit.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        LinearLayout linearLayout = null;
+                        LinearLayout linearLayout;
                         TextView textView = null;
                         ViewGroup row = (ViewGroup) v.getParent();
                         for (int itemPos = 0; itemPos < row.getChildCount(); itemPos++) {

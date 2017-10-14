@@ -23,9 +23,11 @@ public class BuiltInWorkouts {
     public WorkoutTable warmUp = new WorkoutTable("Slow Warm Up by Miles Adamson",
 
             new String[]{"Huge Jug", "Rest", "Huge Jug", "Rest", "Huge Jug", "Rest",
-            "Large Sloper", "Rest", "Large Sloper", "Rest", "Large Edge", "Rest", "Large Edge"},
+            "Large Sloper", "Rest", "Large Sloper", "Rest", "Large Edge", "Rest", "Large Edge", "Rest",
+            "Medium Edge", "Rest", "Medium Edge", "Rest", "Medium Edge", "Rest", "Huge Jug"},
 
-            new String[]{"10", "10", "20", "10", "20", "30", "15", "15", "15", "15", "15", "15", "15"}
+            new String[]{"10", "10", "20", "10", "20", "30", "15", "15", "15", "15", "15", "15", "15", "60",
+            "10", "10", "10", "10", "10", "10", "25"}
     );
 
     public WorkoutTable trainingBeta = new WorkoutTable("Beginner Routine by Training Beta",
