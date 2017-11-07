@@ -77,10 +77,9 @@ public class Workout extends AppCompatActivity {
 
         // Add blank list items so scrolling near the top works smoothly
         readables.add(0, getString(R.string.message_initial));
-        readables.add(0, "");
-        readables.add(0, "");
-        readables.add(0, "");
-        readables.add(0, "");
+        for (int i = 0; i < INDEX_START_OFFSET_LISTVIEW; i++) {
+            readables.add(0, "");
+        }
         readables.add(getString(R.string.message_finished));
 
         // Load an ad into the AdMob banner view.
@@ -249,24 +248,7 @@ public class Workout extends AppCompatActivity {
             public void onFinish() {
                 currentIndex += 1;
                 if(currentIndex == workoutLength){
-                    AlertDialog alertDialog = new AlertDialog.Builder(Workout.this).create();
-                    alertDialog.setMessage(getString(R.string.message_save));
-
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.option_ok),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    saveWorkout();
-                                    dialog.dismiss();
-                                }
-                            });
-
-                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, getString(R.string.option_no),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    alertDialog.show();
+                    save(null);
                     resetWorkout();
                 } else {
                     displayWorkoutActivity();
@@ -324,7 +306,7 @@ public class Workout extends AppCompatActivity {
     public void save(MenuItem item){
         ShareButton fbShareButton = new ShareButton(Workout.this);
         ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse("https://developers.facebook.com"))
+                .setContentUrl(Uri.parse("https://i.imgur.com/KdFuw65.png"))
                 .build();
         fbShareButton.setShareContent(content);
 

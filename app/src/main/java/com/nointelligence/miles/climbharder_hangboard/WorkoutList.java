@@ -159,6 +159,7 @@ public class WorkoutList extends AppCompatActivity {
 
             } else {
                 final ImageView imageEdit = (ImageView) view.findViewById(R.id.imageViewEdit);
+                imageEdit.setImageResource(R.drawable.ic_action_edit);
                 // find TextView with workout name and call askForEdit, but with editable flag true
                 imageEdit.setOnClickListener(new View.OnClickListener() {
                     @Override

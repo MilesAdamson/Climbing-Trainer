@@ -15,7 +15,7 @@
     <string name="message_start">Start</string>
     <string name="message_initial">Initial Countdown</string>
     <string name="message_finished">Last one!</string>
-    <string name="message_save">Save to logbook, or share to Facebook</string>
+    <string name="message_save">Save to logbook, or share to Facebook\n\n</string>
     <string name="message_start_question">Start this workout?</string>
     <string name="message_edit_workout">Edit this workout?"</string>
     <string name="message_view_workout">View this workout?"</string>
@@ -56,13 +56,20 @@
     <string name="error_exist">This workout no longer exists.</string>
     <string name="error_duration">Duration cannot be zero, or more than 999.</string>
     <string name="error_cant_edit">You may not edit the built in workouts.</string>
-    <string name="error_internet">This app requires internet access. Enable WiFi? (Alternatively, enable mobile data manually)</string>
+    <string name="error_internet">Enable WiFi? (Alternatively, enable mobile data manually)</string>
 
     <string-array name="workout_titles">
         <item>One Arm Hangs by Andrew Funk</item>
-        <item>Beginner Routine by Training Beta</item>
-        <item>Intermediate Workout by Crux Crush</item>
-        <item>Slow Warm Up by Miles Adamson</item>
+        <item>Long Beginner Routine</item>
+        <item>Long Intermediate Workout</item>
+        <item>Warm Up by Miles Adamson</item>
+        <item>Squeeze Easily by Marc Eveleigh</item>
+        <item>Intermediate Edge Routine</item>
+        <item>Intermediate Pocket Routine</item>
+        <item>Intermediate Pinch Routine</item>
+        <item>Intermediate Sloper Routine</item>
+        <item>Advanced Edge Routine</item>
+        <item>Advanced Sloper Routine</item>
     </string-array>
 
     <string-array name="array_transgression">
@@ -96,12 +103,8 @@
         <item>Pocket</item>
         <item>Transgression</item>
     </string-array>
-
-    <!-- -
-        This is an ad unit ID for a banner test ad. Replace with your own banner ad unit id.
-        For more information, see https://support.google.com/admob/answer/3052638
-    <!- -->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="my_banner_ad_unit_id">ca-app-pub-8645540572237587/8230150601</string>
 
     <string name="facebook_app_id">490322287997985</string>
     <string name="fb_login_protocol_scheme">fb490322287997985</string>

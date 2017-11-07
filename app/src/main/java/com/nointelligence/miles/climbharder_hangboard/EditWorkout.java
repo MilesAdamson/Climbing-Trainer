@@ -56,6 +56,7 @@ public class EditWorkout extends AppCompatActivity {
         transSizes = getResources().getStringArray(R.array.array_transgression);
 
         // Load an ad into the AdMob banner view.
+        // ca-app-pub-8645540572237587~1124373125
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .setRequestAgent("android_studio:ad_template").build();
@@ -66,9 +67,13 @@ public class EditWorkout extends AppCompatActivity {
         populateListViewFromDB();
     }
 
+    // If this workout isn't editable, do not make edit button visible
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit_workout, menu);
+        if (!getIntent().getBooleanExtra("editable", true)){
+            menu.findItem(R.id.action_add_workout).setVisible(false);
+        }
         return true;
     }
 
@@ -78,7 +83,6 @@ public class EditWorkout extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
