@@ -103,8 +103,8 @@
         <item>Pocket</item>
         <item>Transgression</item>
     </string-array>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="my_banner_ad_unit_id">ca-app-pub-8645540572237587/8230150601</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-8645540572237587/8230150601</string>
 
     <string name="facebook_app_id">490322287997985</string>
     <string name="fb_login_protocol_scheme">fb490322287997985</string>

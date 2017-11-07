@@ -189,10 +189,12 @@ public class BuiltInWorkouts {
     public void addDefaultWorkouts() {
         DatabaseHelper databaseHelper = new DatabaseHelper(context);
         for (int i = 0; i < builtIns.length; i++) {
-            if (databaseHelper.insertWorkout(builtIns[i].getName())) {
-                databaseHelper.fillWorkout(builtIns[i].getName(),
-                        builtIns[i].getActivities(),
-                        builtIns[i].getDurations());
+            if (builtIns[i].getDurations().length == builtIns[i].getDurations().length) {
+                if (databaseHelper.insertWorkout(builtIns[i].getName())) {
+                    databaseHelper.fillWorkout(builtIns[i].getName(),
+                            builtIns[i].getActivities(),
+                            builtIns[i].getDurations());
+                }
             }
         }
     }

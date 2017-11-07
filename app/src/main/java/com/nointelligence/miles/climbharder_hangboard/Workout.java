@@ -84,8 +84,7 @@ public class Workout extends AppCompatActivity {
 
         // Load an ad into the AdMob banner view.
         AdView adView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template").build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
         listView = (ListView)findViewById(R.id.listViewWorkout);
@@ -306,7 +305,7 @@ public class Workout extends AppCompatActivity {
     public void save(MenuItem item){
         ShareButton fbShareButton = new ShareButton(Workout.this);
         ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse("https://i.imgur.com/KdFuw65.png"))
+                .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=com.nointelligence.miles.climbharder_hangboard"))
                 .build();
         fbShareButton.setShareContent(content);
 
